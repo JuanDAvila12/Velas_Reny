@@ -33,7 +33,7 @@ export default async function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="bg-reny-pink text-white px-3 py-1 rounded-full"
+              className="bg-reny-pink text-black px-3 py-1 rounded-full"
             >
               Ingresar
             </Link>
