@@ -18,7 +18,7 @@ const config: Config = {
         "reny-cream": "#FFF7ED",
       },
       fontFamily: {
-        caveat: ["Caveat", "cursive"],
+        caveat: ["var(--font-caveat)", "cursive"],
       },
     },
   },

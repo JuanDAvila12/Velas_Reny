@@ -22,8 +22,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-reny-cream">
-      <form className="bg-white p-8 rounded-2xl shadow-xl w-96 space-y-4">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+      style={{
+  backgroundImage: "url('/images/velas-fondo2.jpg')",
+}}
+    >
+      {/* Capa oscura para mejorar contraste */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      <form className="relative bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-96 space-y-4 z-10">
         <h1 className="text-3xl font-caveat text-reny-purple-dark text-center">
           Iniciar sesión
         </h1>
