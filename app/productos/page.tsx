@@ -8,7 +8,7 @@ export default async function ProductosPage() {
     .select("*, category:categories(name)");
 
   return (
-    <div className="min-h-screen bg-reny-cream py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <h1 className="text-4xl font-caveat text-reny-purple-dark text-center mb-8">
         Nuestras velas
       </h1>
