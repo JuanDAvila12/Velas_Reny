@@ -50,11 +50,12 @@ export default function LoginPage() {
           className="w-full p-3 border border-reny-purple rounded-lg focus:outline-none focus:ring-2 focus:ring-reny-pink"
         />
         <button
-          type="submit"
-          className="w-full bg-reny-purple hover:bg-reny-purple-dark text-white font-bold py-3 rounded-lg transition"
-        >
-          Entrar
-        </button>
+  type="submit"
+  formAction={login}
+  className="w-full bg-reny-purple hover:bg-reny-purple-dark text-white font-bold py-3 rounded-lg transition"
+>
+  Entrar
+</button>
         <p className="text-center text-sm">
           ¿No tienes cuenta?{" "}
           <Link href="/register" className="text-reny-pink-dark underline">
