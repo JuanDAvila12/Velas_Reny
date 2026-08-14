@@ -53,12 +53,13 @@ export default function RegisterPage() {
           required
           className="w-full p-3 border border-reny-purple rounded-lg focus:outline-none focus:ring-2 focus:ring-reny-pink"
         />
-        <button
-          type="submit"
-          className="w-full bg-reny-pink hover:bg-reny-pink-dark text-white font-bold py-3 rounded-lg transition"
-        >
-          Registrarse
-        </button>
+<button
+  type="submit"
+  formAction={register}
+  className="w-full bg-reny-pink hover:bg-reny-pink-dark text-white font-bold py-3 rounded-lg transition"
+>
+  Registrarse
+</button>
         <p className="text-center text-sm">
           ¿Ya tienes cuenta?{" "}
           <Link href="/login" className="text-reny-purple-dark underline">
