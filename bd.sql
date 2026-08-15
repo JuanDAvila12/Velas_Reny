@@ -37,6 +37,7 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 alter table public.profiles add column if not exists is_admin boolean not null default false;
+alter table public.profiles add column if not exists updated_at timestamptz not null default now();
 
 -- 3) Trigger handle_new_user
 create or replace function public.handle_new_user()

@@ -40,17 +40,43 @@ export default async function ProfilePage({
       return redirect("/perfil?error=name_required");
     }
 
-    // RLS garantiza que solo se edite el propio perfil (id = user.id).
-    const { error } = await supabase.from("profiles").upsert({
-      id: user.id,
-      full_name: fullName,
-      phone,
-      address,
-      updated_at: new Date().toISOString(),
-    });
+    // Solo se edita el propio perfil (RLS refuerza auth.uid() = id).
+    // Usamos update + fallback a insert (evita el gotcha de upsert + RLS,
+    // que exige políticas de INSERT y UPDATE a la vez).
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ full_name: fullName, phone, address })
+      .eq("id", user.id)
+      .select("id");
 
     if (error) {
+      console.error("Error al actualizar el perfil:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
       return redirect("/perfil?error=update_failed");
+    }
+
+    // Caso extremo: el perfil no existía (el trigger no corrió al registrarse).
+    if (!data || data.length === 0) {
+      const { error: insertError } = await supabase.from("profiles").insert({
+        id: user.id,
+        full_name: fullName,
+        phone,
+        address,
+      });
+
+      if (insertError) {
+        console.error("Error al crear el perfil:", {
+          message: insertError.message,
+          code: insertError.code,
+          details: insertError.details,
+          hint: insertError.hint,
+        });
+        return redirect("/perfil?error=update_failed");
+      }
     }
 
     revalidatePath("/perfil");
