@@ -1,7 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export default function ContactPage() {
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; error?: string }>;
+}) {
+  const { success, error } = await searchParams;
+
   async function sendMessage(formData: FormData) {
     "use server";
     const supabase = await createClient();
@@ -9,12 +17,25 @@ export default function ContactPage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const subject = formData.get("subject") as string;
-    const message = formData.get("message") as string;
+    const name = (formData.get("name") as string)?.trim();
+    const email = (formData.get("email") as string)?.trim();
+    const subject = (formData.get("subject") as string)?.trim() || null;
+    const message = (formData.get("message") as string)?.trim();
 
-    await supabase.from("contact_messages").insert({
+    if (!name || name.length < 2) {
+      return redirect("/contacto?error=invalid_name");
+    }
+    if (!email || !EMAIL_REGEX.test(email)) {
+      return redirect("/contacto?error=invalid_email");
+    }
+    if (!message || message.length < 5) {
+      return redirect("/contacto?error=invalid_message");
+    }
+    if (message.length > 2000) {
+      return redirect("/contacto?error=message_too_long");
+    }
+
+    const { error: insertError } = await supabase.from("contact_messages").insert({
       user_id: user?.id || null,
       name,
       email,
@@ -22,44 +43,69 @@ export default function ContactPage() {
       message,
     });
 
-    return redirect("/contacto?success=Mensaje enviado");
+    if (insertError) {
+      return redirect("/contacto?error=send_failed");
+    }
+
+    return redirect("/contacto?success=sent");
   }
 
   return (
-    <div className="min-h-screen bg-reny-cream py-12 px-4">
-      <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl p-8">
-        <h1 className="text-3xl font-caveat text-reny-purple-dark mb-4">
+    <div className="min-h-screen px-4 py-12">
+      <div className="mx-auto max-w-xl rounded-2xl bg-white p-8 shadow-xl">
+        <h1 className="mb-4 font-caveat text-3xl text-reny-purple-dark">
           Contáctanos
         </h1>
+
+        {success === "sent" && (
+          <p className="mb-4 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+            ¡Mensaje enviado correctamente! Te responderemos pronto.
+          </p>
+        )}
+        {error && (
+          <p className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            {
+              {
+                invalid_name: "Escribe tu nombre (mínimo 2 caracteres).",
+                invalid_email: "Escribe un correo electrónico válido.",
+                invalid_message: "Escribe un mensaje (mínimo 5 caracteres).",
+                message_too_long: "El mensaje es demasiado largo (máx. 2000 caracteres).",
+                send_failed: "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+              }[error] ?? "Ocurrió un error. Revisa los campos e inténtalo de nuevo."
+            }
+          </p>
+        )}
+
         <form className="space-y-4">
           <input
             name="name"
             placeholder="Tu nombre"
             required
-            className="w-full p-3 border border-reny-purple rounded-lg"
+            className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
           />
           <input
             name="email"
             type="email"
             placeholder="Correo electrónico"
             required
-            className="w-full p-3 border border-reny-purple rounded-lg"
+            className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
           />
           <input
             name="subject"
             placeholder="Asunto"
-            className="w-full p-3 border border-reny-purple rounded-lg"
+            className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
           />
           <textarea
             name="message"
             placeholder="Escribe tu mensaje..."
             required
             rows={5}
-            className="w-full p-3 border border-reny-purple rounded-lg"
+            className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
           ></textarea>
           <button
+            type="submit"
             formAction={sendMessage}
-            className="w-full bg-reny-purple hover:bg-reny-purple-dark text-white font-bold py-3 rounded-lg transition"
+            className="w-full rounded-lg bg-reny-purple py-3 font-bold text-white transition hover:bg-reny-purple-dark"
           >
             Enviar
           </button>

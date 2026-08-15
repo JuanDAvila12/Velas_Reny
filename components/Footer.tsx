@@ -1,10 +1,13 @@
 export default function Footer() {
   return (
-    <footer className="bg-reny-purple-dark text-white py-6 mt-12">
-      <div className="max-w-6xl mx-auto text-center">
+    <footer className="mt-12 bg-reny-purple-dark px-4 py-6 text-white">
+      <div className="mx-auto max-w-6xl text-center">
         <p className="font-caveat text-xl">Velas Reny</p>
-        <p className="text-sm mt-1">
+        <p className="mt-1 text-sm">
           © {new Date().getFullYear()} Todos los derechos reservados
+        </p>
+        <p className="mt-1 text-xs text-white/70">
+          Hecho a mano con cera de soya natural
         </p>
       </div>
     </footer>

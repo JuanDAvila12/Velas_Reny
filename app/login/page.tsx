@@ -2,67 +2,96 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+const ERROR_MESSAGES: Record<string, string> = {
+  invalid_credentials: "Credenciales incorrectas. Verifica tu correo y contraseña.",
+  email_not_confirmed: "Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.",
+  auth: "Ocurrió un error al iniciar sesión. Inténtalo de nuevo.",
+};
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; message?: string }>;
+}) {
+  const { error, message } = await searchParams;
+
   async function login(formData: FormData) {
     "use server";
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const supabase = await createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    if (!email || !password) {
+      return redirect("/login?error=auth");
+    }
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      return redirect("/login?error=Credenciales incorrectas");
+      const msg = error.message.toLowerCase();
+      if (msg.includes("email not confirmed")) {
+        return redirect("/login?error=email_not_confirmed");
+      }
+      if (msg.includes("invalid login credentials")) {
+        return redirect("/login?error=invalid_credentials");
+      }
+      return redirect("/login?error=auth");
     }
 
     return redirect("/perfil");
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
-      style={{
-  backgroundImage: "url('/images/velas-fondo2.jpg')",
-}}
-    >
-      {/* Capa oscura para mejorar contraste */}
-      <div className="absolute inset-0 bg-black/40"></div>
-
-      <form className="relative bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-96 space-y-4 z-10">
-        <h1 className="text-3xl font-caveat text-reny-purple-dark text-center">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm space-y-4 rounded-2xl bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+        <h1 className="text-center text-3xl font-caveat text-reny-purple-dark">
           Iniciar sesión
         </h1>
-        <input
-          name="email"
-          type="email"
-          placeholder="Correo electrónico"
-          required
-          className="w-full p-3 border border-reny-purple rounded-lg focus:outline-none focus:ring-2 focus:ring-reny-pink"
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Contraseña"
-          required
-          className="w-full p-3 border border-reny-purple rounded-lg focus:outline-none focus:ring-2 focus:ring-reny-pink"
-        />
-        <button
-  type="submit"
-  formAction={login}
-  className="w-full bg-reny-purple hover:bg-reny-purple-dark text-white font-bold py-3 rounded-lg transition"
->
-  Entrar
-</button>
+
+        {error && (
+          <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            {ERROR_MESSAGES[error] ?? ERROR_MESSAGES.auth}
+          </p>
+        )}
+        {message === "check_email" && (
+          <p className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+            Revisa tu correo para confirmar tu cuenta.
+          </p>
+        )}
+
+        <form className="space-y-4">
+          <input
+            name="email"
+            type="email"
+            placeholder="Correo electrónico"
+            required
+            autoComplete="email"
+            className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Contraseña"
+            required
+            autoComplete="current-password"
+            className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          />
+          <button
+            type="submit"
+            formAction={login}
+            className="w-full rounded-lg bg-reny-purple py-3 font-bold text-white transition hover:bg-reny-purple-dark"
+          >
+            Entrar
+          </button>
+        </form>
+
         <p className="text-center text-sm">
           ¿No tienes cuenta?{" "}
           <Link href="/register" className="text-reny-pink-dark underline">
             Regístrate
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }

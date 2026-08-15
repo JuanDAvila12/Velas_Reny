@@ -4,35 +4,39 @@ import ProductCard from "@/components/ProductCard";
 
 export default async function Home() {
   const supabase = await createClient();
+
   const { data: featuredProducts } = await supabase
     .from("products")
     .select("*, category:categories(name)")
     .eq("is_featured", true)
     .limit(4);
 
-  const { data: categories } = await supabase.from("categories").select("*");
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("*")
+    .order("name");
 
   return (
-    <div className="bg-reny-cream min-h-screen">
+    <div className="min-h-screen">
       {/* Hero */}
       <section className="relative bg-reny-purple/30 py-20 text-center">
         <h1 className="text-5xl font-caveat text-reny-purple-dark">
           Velas Reny
         </h1>
-        <p className="text-lg text-gray-700 mt-4">
+        <p className="mt-4 text-lg text-gray-700">
           Ilumina tus momentos especiales con nuestras velas artesanales
         </p>
         <Link
           href="/productos"
-          className="mt-6 inline-block bg-reny-pink hover:bg-reny-pink-dark text-white font-bold py-3 px-6 rounded-full"
+          className="mt-6 inline-block rounded-full bg-reny-pink px-6 py-3 font-bold text-white transition hover:bg-reny-pink-dark"
         >
           Ver catálogo
         </Link>
       </section>
 
       {/* Categorías */}
-      <section className="max-w-6xl mx-auto py-12 px-4">
-        <h2 className="text-3xl font-caveat text-reny-purple-dark mb-6 text-center">
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="mb-6 text-center text-3xl font-caveat text-reny-purple-dark">
           Categorías
         </h2>
         <div className="flex flex-wrap justify-center gap-4">
@@ -40,7 +44,7 @@ export default async function Home() {
             <Link
               key={cat.id}
               href={`/categorias/${cat.slug}`}
-              className="bg-white px-4 py-2 rounded-full shadow hover:bg-reny-pink hover:text-white transition"
+              className="rounded-full bg-white px-4 py-2 shadow transition hover:bg-reny-pink hover:text-white"
             >
               {cat.name}
             </Link>
@@ -49,15 +53,27 @@ export default async function Home() {
       </section>
 
       {/* Productos destacados */}
-      <section className="max-w-6xl mx-auto py-12 px-4">
-        <h2 className="text-3xl font-caveat text-reny-purple-dark mb-6 text-center">
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="mb-6 text-center text-3xl font-caveat text-reny-purple-dark">
           Destacados
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts?.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {featuredProducts && featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">
+            Pronto tendremos productos destacados.{" "}
+            <Link
+              href="/productos"
+              className="text-reny-pink-dark underline"
+            >
+              Ver catálogo
+            </Link>
+          </p>
+        )}
       </section>
     </div>
   );

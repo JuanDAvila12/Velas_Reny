@@ -2,6 +2,13 @@ import { Caveat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Velas Reny | Velas artesanales",
+  description:
+    "Catálogo de velas artesanales de cera de soya natural para iluminar tus momentos especiales.",
+};
 
 const caveat = Caveat({
   subsets: ["latin"],
