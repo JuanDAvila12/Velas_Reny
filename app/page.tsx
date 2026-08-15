@@ -18,20 +18,30 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="relative bg-reny-purple/30 py-20 text-center">
-        <h1 className="text-5xl font-caveat text-reny-purple-dark">
-          Velas Reny
-        </h1>
-        <p className="mt-4 text-lg text-gray-700">
-          Ilumina tus momentos especiales con nuestras velas artesanales
-        </p>
-        <Link
-          href="/productos"
-          className="mt-6 inline-block rounded-full bg-reny-pink px-6 py-3 font-bold text-white transition hover:bg-reny-pink-dark"
-        >
-          Ver catálogo
-        </Link>
+      {/* Hero con gradiente animado */}
+      <section className="animate-gradient-x relative overflow-hidden bg-gradient-to-r from-reny-purple/40 via-reny-pink/30 to-reny-green/30 py-24 text-center">
+        <div className="relative mx-auto max-w-3xl animate-fade-up px-4">
+          <h1 className="text-6xl font-caveat text-reny-purple-dark drop-shadow-lg sm:text-7xl">
+            Velas Reny
+          </h1>
+          <p className="mt-4 text-lg text-gray-700">
+            Ilumina tus momentos especiales con nuestras velas artesanales
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/productos"
+              className="rounded-full bg-gradient-to-r from-reny-purple to-reny-pink px-8 py-3 font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
+            >
+              Ver catálogo
+            </Link>
+            <Link
+              href="/contacto"
+              className="rounded-full border border-reny-purple-dark bg-white/60 px-8 py-3 font-bold text-reny-purple-dark transition hover:-translate-y-0.5 hover:bg-white"
+            >
+              Contáctanos
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Categorías */}
@@ -44,7 +54,7 @@ export default async function Home() {
             <Link
               key={cat.id}
               href={`/categorias/${cat.slug}`}
-              className="rounded-full bg-white px-4 py-2 shadow transition hover:bg-reny-pink hover:text-white"
+              className="glass rounded-full px-4 py-2 shadow transition hover:bg-white hover:text-reny-pink-dark"
             >
               {cat.name}
             </Link>

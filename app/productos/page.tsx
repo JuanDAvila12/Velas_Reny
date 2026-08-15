@@ -41,20 +41,20 @@ export default async function ProductosPage({
 
   return (
     <div className="min-h-screen px-4 py-12">
-      <h1 className="mb-8 text-center text-4xl font-caveat text-reny-purple-dark">
+      <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
         Nuestras velas
       </h1>
 
       <form
         method="GET"
-        className="mx-auto mb-8 flex max-w-3xl flex-wrap items-end justify-center gap-4"
+        className="glass mx-auto mb-8 flex max-w-3xl flex-wrap items-end justify-center gap-4 rounded-2xl p-5 shadow"
       >
         <div>
           <label className="mb-1 block text-sm font-medium">Categoría</label>
           <select
             name="categoria"
             defaultValue={categoria ?? ""}
-            className="rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
           >
             <option value="">Todas</option>
             {categories?.map((c) => (
@@ -69,7 +69,7 @@ export default async function ProductosPage({
           <select
             name="aroma"
             defaultValue={aroma ?? ""}
-            className="rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
           >
             <option value="">Todos</option>
             {distinctAromas.map((a) => (
@@ -81,7 +81,7 @@ export default async function ProductosPage({
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-reny-purple px-6 py-3 font-bold text-white transition hover:bg-reny-purple-dark"
+          className="rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink px-6 py-3 font-bold text-white transition hover:opacity-90"
         >
           Filtrar
         </button>

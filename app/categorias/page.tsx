@@ -10,16 +10,16 @@ export default async function CategoriasPage() {
     .order("name");
 
   return (
-    <div className="min-h-screen bg-reny-cream py-12 px-4">
-      <h1 className="text-4xl font-caveat text-reny-purple-dark text-center mb-8">
+    <div className="min-h-screen px-4 py-12">
+      <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
         Categorías
       </h1>
-      <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="mx-auto grid max-w-3xl animate-fade-in grid-cols-2 gap-4 sm:grid-cols-3">
         {categories?.map((cat) => (
           <Link
             key={cat.id}
             href={`/categorias/${cat.slug}`}
-            className="bg-white p-4 rounded-xl shadow text-center hover:bg-reny-purple hover:text-white transition"
+            className="glass rounded-xl p-4 text-center shadow transition hover:-translate-y-0.5 hover:bg-white hover:text-reny-purple-dark"
           >
             {cat.name}
           </Link>

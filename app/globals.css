@@ -8,20 +8,20 @@ body {
   margin: 0;
 }
 
-/* Fondo fijo con imagen y una capa crema translúcida para que el contenido sea legible */
+/* Fondo fijo con imagen y capa crema translúcida */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background-image:
     linear-gradient(rgba(255, 247, 237, 0.85), rgba(255, 247, 237, 0.85)),
-    url('/images/velas-fondo2.jpg'); /* usa tu imagen favorita */
+    url('/images/velas-fondo2.jpg');
   background-size: cover;
   background-position: center;
   z-index: -1;
 }
 
-/* Animación lenta para la imagen del Navbar */
+/* Animación lenta para fondos */
 @keyframes slow-zoom {
   0%, 100% {
     transform: scale(1);
@@ -30,7 +30,49 @@ body::before {
     transform: scale(1.1);
   }
 }
-
 .animate-slow-zoom {
   animation: slow-zoom 20s ease-in-out infinite;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Fade-in y fade-up */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.7s ease-out both;
+}
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+/* Gradiente animado de fondo */
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 10s ease infinite;
+}
+
+/* Texto con gradiente */
+.text-gradient {
+  background-image: linear-gradient(135deg, #A78BFA, #F472B6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }

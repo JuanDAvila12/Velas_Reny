@@ -95,6 +95,54 @@ Puedes ver el UUID en **Dashboard → Authentication → Users**.
 El bucket `product-images` es **público** (todos pueden ver las imágenes)
 pero solo los administradores pueden subir, actualizar o borrar archivos.
 
+## Carga masiva de productos (Bulk Upload)
+
+En `/admin`, la pestaña **Carga masiva** permite crear muchos productos a la vez:
+
+- **Archivo CSV**: sube un `.csv` con las columnas de la plantilla
+  ([`bulk-template.csv`](./public/bulk-template.csv)).
+- **Pegar JSON**: pega un array de objetos con los mismos campos.
+
+### Formato (columnas / claves)
+
+| Campo         | Obligatorio | Descripción |
+| ------------- | ----------- | ----------- |
+| `name`        | Sí          | Nombre del producto. |
+| `slug`        | No          | URL amigable; si falta se genera del nombre. |
+| `description` | No          | Descripción. |
+| `price`       | Sí          | Precio (número positivo). |
+| `stock`       | No          | Entero ≥ 0 (por defecto 0). |
+| `category`    | No          | Nombre o id; si el nombre no existe se crea la categoría. |
+| `aroma`       | No          | Aroma. |
+| `color`       | No          | Color. |
+| `tamano`      | No          | Tamaño. |
+| `intensidad`  | No          | Intensidad. |
+| `image_url`   | No          | URL externa de la imagen. |
+| `is_featured` | No          | `true`/`false` (por defecto `false`). |
+
+### Ejemplo JSON
+
+```json
+[
+  {
+    "name": "Vela de Vainilla",
+    "price": 120,
+    "stock": 10,
+    "category": "Aromáticas",
+    "aroma": "Vainilla",
+    "is_featured": true
+  }
+]
+```
+
+### Notas de seguridad
+
+- Solo administradores pueden usar la carga masiva (se verifica `is_admin()`).
+- Máximo 1 MB por archivo/JSON.
+- Los campos se validan y sanean en el servidor.
+- Los slugs se generan con unicidad automática.
+- Los errores se reportan fila por fila.
+
 ## Scripts
 
 | Comando          | Descripción                          |

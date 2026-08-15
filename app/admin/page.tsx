@@ -1,12 +1,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/supabase/admin";
-import AdminPanel from "@/components/AdminPanel";
+import AdminDashboard from "@/components/AdminDashboard";
 import type { ProductSummary } from "@/lib/types";
 
 export default async function AdminPage() {
-  // Defensa en profundidad: aunque el proxy ya protege /admin,
-  // volvemos a verificar el rol en el servidor.
   if (!(await isAdmin())) {
     redirect("/");
   }
@@ -18,6 +16,14 @@ export default async function AdminPage() {
     .select("id, name")
     .order("name");
 
+  const { count: productCount } = await supabase
+    .from("products")
+    .select("*", { count: "exact", head: true });
+
+  const { count: categoryCount } = await supabase
+    .from("categories")
+    .select("*", { count: "exact", head: true });
+
   const { data: products } = await supabase
     .from("products")
     .select(
@@ -28,15 +34,17 @@ export default async function AdminPage() {
 
   return (
     <div className="min-h-screen px-4 py-12">
-      <div className="mx-auto max-w-2xl space-y-8">
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
-          <h1 className="mb-6 text-3xl font-caveat text-reny-purple-dark">
-            Panel de administración
-          </h1>
-          <AdminPanel categories={categories ?? []} />
-        </div>
+      <div className="mx-auto max-w-4xl space-y-8">
+        <h1 className="animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
+          Panel de administración
+        </h1>
 
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
+        <AdminDashboard
+          categories={categories ?? []}
+          stats={{ products: productCount ?? 0, categories: categoryCount ?? 0 }}
+        />
+
+        <div className="glass rounded-2xl p-6 shadow-xl">
           <h2 className="mb-4 text-2xl font-caveat text-reny-purple-dark">
             Productos existentes ({products?.length ?? 0})
           </h2>

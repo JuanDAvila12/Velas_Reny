@@ -17,6 +17,10 @@ export default async function ProductDetailPage({
 
   if (!product) notFound();
 
+  const gallery = [product.image_url, ...(product.images ?? [])].filter(
+    Boolean
+  ) as string[];
+
   const details = [
     ["Aroma", product.aroma],
     ["Color", product.color],
@@ -25,19 +29,34 @@ export default async function ProductDetailPage({
   ].filter(([, v]) => v) as [string, string][];
 
   return (
-    <div className="min-h-screen px-4 py-12">
-      <div className="mx-auto grid max-w-4xl gap-8 rounded-2xl bg-white p-8 shadow-xl md:grid-cols-2">
-        <img
-          src={product.image_url || "/placeholder-vela.jpg"}
-          alt={product.name}
-          className="h-80 w-full rounded-xl object-cover"
-        />
+    <div className="min-h-screen animate-fade-in px-4 py-12">
+      <div className="glass mx-auto grid max-w-5xl gap-8 rounded-2xl p-8 shadow-xl md:grid-cols-2">
+        <div>
+          <img
+            src={gallery[0] || "/placeholder-vela.jpg"}
+            alt={product.name}
+            className="h-80 w-full rounded-xl object-cover shadow"
+          />
+          {gallery.length > 1 && (
+            <div className="mt-3 flex gap-2 overflow-x-auto">
+              {gallery.map((g, i) => (
+                <img
+                  key={i}
+                  src={g}
+                  alt={`${product.name} ${i + 1}`}
+                  className="h-20 w-20 shrink-0 rounded-lg object-cover opacity-70 transition hover:opacity-100"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="space-y-4">
           <h1 className="text-4xl font-caveat text-reny-purple-dark">
             {product.name}
           </h1>
           <p className="text-gray-600">{product.description}</p>
-          <p className="text-2xl font-bold text-reny-pink-dark">
+          <p className="text-gradient text-3xl font-bold">
             ${product.price ?? "—"}
           </p>
           {product.stock != null && (
@@ -55,7 +74,7 @@ export default async function ProductDetailPage({
             </span>
           )}
           {details.length > 0 && (
-            <ul className="space-y-1 rounded-xl bg-gray-50 p-4 text-sm">
+            <ul className="space-y-1 rounded-xl bg-white/60 p-4 text-sm">
               {details.map(([label, value]) => (
                 <li key={label}>
                   <span className="font-semibold">{label}:</span> {value}
@@ -65,7 +84,7 @@ export default async function ProductDetailPage({
           )}
           <button
             disabled
-            className="mt-4 w-full cursor-not-allowed rounded-lg bg-gray-300 py-3 font-bold text-white"
+            className="mt-4 w-full cursor-not-allowed rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white opacity-60"
           >
             Próximamente disponible para compra
           </button>

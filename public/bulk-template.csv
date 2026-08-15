@@ -1,0 +1,4 @@
+name,slug,description,price,stock,category,aroma,color,tamano,intensidad,image_url,is_featured
+Vela de Vainilla,vela-de-vainilla,Vela artesanal con esencia de vainilla,120.00,10,Aromáticas,Vainilla,Blanco,8 oz,Media,,true
+Vela de Lavanda,,Aroma relajante de lavanda,110.00,5,Aromáticas,Lavanda,Morado,8 oz,Suave,,false
+Vela Navideña,,Vela decorativa navideña,150.00,20,Temporada Navideña,Canela,Rojo,12 oz,Intensa,https://example.com/vela.jpg,true
