@@ -61,11 +61,13 @@ export default async function ProductDetailPage({
           </p>
           {product.stock != null && (
             <p
-              className={`text-sm ${
+              className={`text-sm font-medium ${
                 product.stock > 0 ? "text-green-600" : "text-red-500"
               }`}
             >
-              {product.stock > 0 ? `Disponibles: ${product.stock}` : "Agotado"}
+              {product.stock > 0
+                ? `Stock disponible: ${product.stock}`
+                : "Agotado — sin stock"}
             </p>
           )}
           {product.category && (
@@ -84,9 +86,15 @@ export default async function ProductDetailPage({
           )}
           <button
             disabled
-            className="mt-4 w-full cursor-not-allowed rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white opacity-60"
+            className={`mt-4 w-full cursor-not-allowed rounded-lg py-3 font-bold text-white opacity-60 ${
+              product.stock > 0
+                ? "bg-gradient-to-r from-reny-purple to-reny-pink"
+                : "bg-gray-400"
+            }`}
           >
-            Próximamente disponible para compra
+            {product.stock > 0
+              ? "Próximamente disponible para compra"
+              : "Agotado"}
           </button>
         </div>
       </div>

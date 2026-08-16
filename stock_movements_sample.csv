@@ -1,0 +1,5 @@
+product_id,movement_type,quantity,note
+1,entrada,50,Producción inicial
+1,salida,10,Venta en tienda
+1,ajuste,35,Conteo físico semanal (stock absoluto)
+2,ajuste_inicial,25,Inventario inicial (stock absoluto)

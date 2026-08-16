@@ -41,3 +41,37 @@ export interface Profile {
   is_admin: boolean;
   created_at: string;
 }
+
+export type StockMovementType =
+  | "entrada"
+  | "salida"
+  | "ajuste_inicial"
+  | "ajuste";
+
+export interface StockMovement {
+  id: number;
+  product_id: number;
+  movement_type: StockMovementType;
+  quantity: number;
+  note: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface InventoryProduct {
+  id: number;
+  name: string;
+  stock: number;
+  category?: { name: string } | null;
+}
+
+/** Forma serializable que se pasa al componente cliente de inventario. */
+export interface MovementRow {
+  id: number;
+  product_name: string;
+  movement_type: StockMovementType;
+  quantity: number;
+  note: string | null;
+  creator_name: string;
+  created_at: string;
+}

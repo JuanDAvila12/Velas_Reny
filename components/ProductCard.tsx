@@ -19,6 +19,11 @@ export default function ProductCard({ product }: { product: Product }) {
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
+          {product.stock != null && product.stock <= 0 && (
+            <span className="absolute left-3 top-3 z-10 rounded-full bg-red-500/90 px-3 py-1 text-xs font-bold text-white shadow">
+              Agotado
+            </span>
+          )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <span className="rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-reny-purple-dark">
               Ver detalle

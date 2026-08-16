@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import SocialAuthButtons from "@/components/SocialAuthButtons";
 
 const ERROR_MESSAGES: Record<string, string> = {
   email_taken: "Ya existe una cuenta con este correo electrónico.",
   weak_password: "La contraseña debe tener al menos 6 caracteres.",
+  oauth_error: "No se pudo continuar con el proveedor social. Inténtalo de nuevo.",
   auth: "Ocurrió un error al registrarte. Inténtalo de nuevo.",
 };
 
@@ -99,6 +101,8 @@ export default async function RegisterPage({
             Registrarse
           </button>
         </form>
+
+        <SocialAuthButtons />
 
         <p className="text-center text-sm">
           ¿Ya tienes cuenta?{" "}

@@ -3,15 +3,21 @@
 import { useState } from "react";
 import AdminPanel from "./AdminPanel";
 import BulkUpload from "./BulkUpload";
+import InventoryPanel from "./InventoryPanel";
+import type { InventoryProduct, MovementRow } from "@/lib/types";
 
 export default function AdminDashboard({
   categories,
   stats,
+  products,
+  movements,
 }: {
   categories: { id: number; name: string }[];
   stats: { products: number; categories: number };
+  products: InventoryProduct[];
+  movements: MovementRow[];
 }) {
-  const [tab, setTab] = useState<"single" | "bulk">("single");
+  const [tab, setTab] = useState<"single" | "bulk" | "inventory">("single");
 
   return (
     <div className="space-y-8">
@@ -56,12 +62,25 @@ export default function AdminDashboard({
           >
             Carga masiva
           </button>
+          <button
+            type="button"
+            onClick={() => setTab("inventory")}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+              tab === "inventory"
+                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                : "bg-white/70 text-gray-600 hover:bg-white"
+            }`}
+          >
+            Inventario
+          </button>
         </div>
 
         {tab === "single" ? (
           <AdminPanel categories={categories} />
-        ) : (
+        ) : tab === "bulk" ? (
           <BulkUpload />
+        ) : (
+          <InventoryPanel products={products} movements={movements} />
         )}
       </div>
     </div>

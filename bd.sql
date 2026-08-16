@@ -30,12 +30,14 @@ grant execute on function public.is_admin() to anon, authenticated;
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text,
+  avatar_url text,
   phone text,
   address text,
   is_admin boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+alter table public.profiles add column if not exists avatar_url text;
 alter table public.profiles add column if not exists is_admin boolean not null default false;
 alter table public.profiles add column if not exists updated_at timestamptz not null default now();
 
@@ -47,10 +49,15 @@ security definer
 set search_path = ''
 as $$
 begin
-  insert into public.profiles (id, full_name)
+  insert into public.profiles (id, full_name, avatar_url)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data ->> 'full_name', new.raw_user_meta_data ->> 'name', '')
+    coalesce(new.raw_user_meta_data ->> 'full_name', new.raw_user_meta_data ->> 'name', ''),
+    coalesce(
+      new.raw_user_meta_data ->> 'avatar_url',
+      new.raw_user_meta_data ->> 'picture',
+      null
+    )
   )
   on conflict (id) do nothing;
   return new;
@@ -257,7 +264,120 @@ create policy product_images_delete_admin
   using (bucket_id = 'product-images' and public.is_admin());
 
 -- =====================================================================
--- 13) PROMOCIONAR ADMINISTRADOR (manual, después de registrarte)
+-- 13) Tabla stock_movements (control de inventario / movimientos de stock)
+-- =====================================================================
+create table if not exists public.stock_movements (
+  id bigint generated always as identity primary key,
+  product_id bigint not null references public.products(id) on delete cascade,
+  movement_type text not null check (movement_type in ('entrada','salida','ajuste_inicial','ajuste')),
+  quantity integer not null,
+  note text,
+  created_by uuid references auth.users(id) default auth.uid(),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists stock_movements_product_id_idx on public.stock_movements (product_id);
+create index if not exists stock_movements_created_at_idx on public.stock_movements (created_at desc);
+
+alter table public.stock_movements enable row level security;
+
+-- Convención de `quantity` (documentada en README.md):
+--   · entrada:        cantidad POSITIVA; se suma al stock.
+--   · salida:         cantidad POSITIVA; se resta del stock (no puede quedar negativo).
+--   · ajuste:         cantidad = NUEVO stock absoluto (>= 0).
+--   · ajuste_inicial: cantidad = NUEVO stock absoluto (>= 0).
+
+-- 14) Políticas RLS — stock_movements (SOLO administradores)
+drop policy if exists stock_movements_select_admin on public.stock_movements;
+create policy stock_movements_select_admin
+  on public.stock_movements for select
+  to authenticated
+  using (public.is_admin());
+
+drop policy if exists stock_movements_insert_admin on public.stock_movements;
+create policy stock_movements_insert_admin
+  on public.stock_movements for insert
+  to authenticated
+  with check (public.is_admin());
+
+drop policy if exists stock_movements_update_admin on public.stock_movements;
+create policy stock_movements_update_admin
+  on public.stock_movements for update
+  to authenticated
+  using (public.is_admin())
+  with check (public.is_admin());
+
+drop policy if exists stock_movements_delete_admin on public.stock_movements;
+create policy stock_movements_delete_admin
+  on public.stock_movements for delete
+  to authenticated
+  using (public.is_admin());
+
+-- 15) Trigger update_product_stock: al INSERTAR un movimiento,
+--     actualiza products.stock de forma atómica.
+create or replace function public.update_product_stock()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  current_stock integer;
+  new_stock integer;
+begin
+  -- Bloquea la fila del producto para evitar condiciones de carrera (atomicidad).
+  select p.stock
+    into current_stock
+    from public.products p
+   where p.id = new.product_id
+   for update;
+
+  if not found then
+    raise exception 'El producto % no existe.', new.product_id;
+  end if;
+
+  case new.movement_type
+    when 'entrada' then
+      if new.quantity <= 0 then
+        raise exception 'La cantidad de una entrada debe ser un entero positivo.';
+      end if;
+      new_stock := current_stock + new.quantity;
+
+    when 'salida' then
+      if new.quantity <= 0 then
+        raise exception 'La cantidad de una salida debe ser un entero positivo.';
+      end if;
+      if new.quantity > current_stock then
+        raise exception 'Stock insuficiente: hay %, se intenta retirar %.', current_stock, new.quantity;
+      end if;
+      new_stock := current_stock - new.quantity;
+
+    when 'ajuste', 'ajuste_inicial' then
+      if new.quantity < 0 then
+        raise exception 'El ajuste debe indicar un stock absoluto no negativo.';
+      end if;
+      new_stock := new.quantity;
+
+    else
+      raise exception 'Tipo de movimiento no válido: %', new.movement_type;
+  end case;
+
+  update public.products
+     set stock = new_stock,
+         updated_at = now()
+   where id = new.product_id;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_update_product_stock on public.stock_movements;
+create trigger trg_update_product_stock
+  after insert on public.stock_movements
+  for each row execute function public.update_product_stock();
+
+-- =====================================================================
+-- 16) PROMOCIONAR ADMINISTRADOR (manual, después de registrarte)
 --     Sustituye 'TU_USER_ID' por el UUID real (Dashboard -> Auth -> Users).
 -- =====================================================================
 -- update public.profiles

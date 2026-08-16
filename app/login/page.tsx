@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import SocialAuthButtons from "@/components/SocialAuthButtons";
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid_credentials: "Credenciales incorrectas. Verifica tu correo y contraseña.",
   email_not_confirmed: "Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.",
+  oauth_error: "No se pudo iniciar sesión con el proveedor social. Inténtalo de nuevo.",
   auth: "Ocurrió un error al iniciar sesión. Inténtalo de nuevo.",
 };
 
@@ -84,6 +86,8 @@ export default async function LoginPage({
             Entrar
           </button>
         </form>
+
+        <SocialAuthButtons />
 
         <p className="text-center text-sm">
           ¿No tienes cuenta?{" "}
