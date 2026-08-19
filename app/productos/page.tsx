@@ -160,12 +160,12 @@ export default async function ProductosPage({
   );
 
   return (
-    <div className="min-h-screen px-4 py-12">
+    <div className="min-h-screen px-4 py-12 md:px-6">
       <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
         Nuestras velas
       </h1>
 
-      <div className="mx-auto max-w-6xl gap-8 lg:grid lg:grid-cols-[240px_1fr]">
+      <div className="mx-auto max-w-7xl gap-8 lg:grid lg:grid-cols-[240px_1fr]">
         {/* Barra lateral (desktop) */}
         <aside className="glass hidden h-fit rounded-2xl p-5 shadow lg:block">
           <h2 className="mb-4 text-xl font-caveat text-reny-purple-dark">
@@ -187,7 +187,7 @@ export default async function ProductosPage({
             {count ?? 0} producto{(count ?? 0) === 1 ? "" : "s"}
           </p>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {products && products.length > 0 ? (
               products.map((product) => (
                 <ProductCard key={product.id} product={product} />

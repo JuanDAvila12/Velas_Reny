@@ -26,9 +26,9 @@ export default function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <div className="group flex animate-fade-up flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <Link href={`/productos/${product.slug}`} className="flex flex-col">
-        <div className="relative h-48 overflow-hidden">
+    <div className="group flex animate-fade-up flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+      <Link href={`/productos/${product.slug}`} className="flex flex-1 flex-col">
+        <div className="relative h-32 overflow-hidden md:h-36 lg:h-40">
           <img
             src={product.image_url || "/placeholder-vela.jpg"}
             alt={product.name}
@@ -36,28 +36,34 @@ export default function ProductCard({ product }: { product: Product }) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           {outOfStock && (
-            <span className="absolute left-3 top-3 z-10 rounded-full bg-red-500/90 px-3 py-1 text-xs font-bold text-white shadow">
+            <span className="absolute left-2 top-2 z-10 rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow">
               Sin stock
             </span>
           )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <span className="rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-reny-purple-dark">
+            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-reny-purple-dark">
               Ver detalle
             </span>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col p-4">
-          <h3 className="font-caveat text-2xl text-reny-purple-dark">
+        <div className="flex flex-1 flex-col p-3">
+          <h3 className="truncate text-sm font-semibold text-reny-purple-dark md:text-base">
             {product.name}
           </h3>
 
+          {product.description && (
+            <p className="mt-0.5 line-clamp-1 text-xs text-gray-600 md:text-sm">
+              {product.description}
+            </p>
+          )}
+
           {chips.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1.5">
+            <div className="mt-1.5 flex flex-wrap gap-1">
               {chips.map((c) => (
                 <span
                   key={c}
-                  className="rounded-full bg-reny-purple/20 px-2 py-0.5 text-xs text-reny-purple-dark"
+                  className="rounded-full bg-reny-purple/20 px-2 py-0.5 text-[10px] text-reny-purple-dark"
                 >
                   {c}
                 </span>
@@ -65,12 +71,20 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
           )}
 
-          <div className="mt-auto flex items-center justify-between pt-3">
-            <p className="text-gradient text-lg font-bold">
+          <p
+            className={`mt-1.5 text-xs font-medium ${
+              outOfStock ? "text-red-500" : "text-green-600"
+            }`}
+          >
+            Stock: {product.stock}
+          </p>
+
+          <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+            <p className="text-base font-bold text-reny-pink-dark">
               ${product.price ?? "—"}
             </p>
             {product.category && (
-              <span className="rounded-full bg-reny-green px-2 py-0.5 text-xs text-white">
+              <span className="truncate rounded-full bg-reny-green px-2 py-0.5 text-[10px] text-white">
                 {product.category.name}
               </span>
             )}
@@ -78,12 +92,12 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </Link>
 
-      <div className="px-4 pb-4">
+      <div className="px-3 pb-3">
         <button
           type="button"
           onClick={handleAdd}
           disabled={outOfStock}
-          className={`w-full rounded-lg py-2 text-sm font-bold transition ${
+          className={`w-full rounded-full py-1 text-xs font-bold transition ${
             outOfStock
               ? "cursor-not-allowed bg-gray-300 text-gray-500"
               : added
@@ -91,7 +105,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 : "bg-gradient-to-r from-reny-purple to-reny-pink text-white hover:opacity-90"
           }`}
         >
-          {outOfStock ? "Sin stock" : added ? "¡Agregado!" : "Agregar al carrito"}
+          {outOfStock ? "Sin stock" : added ? "Agregado" : "Agregar"}
         </button>
       </div>
     </div>
