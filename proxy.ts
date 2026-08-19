@@ -37,7 +37,9 @@ export async function proxy(request: NextRequest) {
 
   // Rutas que requieren autenticación.
   const requiresAuth =
-    pathname.startsWith("/perfil") || pathname.startsWith("/admin");
+    pathname.startsWith("/perfil") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/checkout");
 
   if (requiresAuth && !user) {
     const url = request.nextUrl.clone();

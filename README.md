@@ -9,6 +9,9 @@ Catálogo de velas artesanales construido con **Next.js 16 (App Router)**, **Typ
 - 🕯️ Catálogo público con filtros por **categoría** y **aroma**.
 - 🛡️ Panel de administración protegido por rol (`profiles.is_admin`).
 - 📦 Control de inventario con movimientos (entradas / salidas / ajustes).
+- 🛒 Carrito de compras persistente (localStorage) con badge en el navbar.
+- 💳 Checkout protegido con creación de pedidos y descuento automático de stock.
+- 🧾 Punto de venta (POS) para administradores.
 - 🖼️ Subida de imágenes a Supabase Storage (bucket `product-images`).
 - ✉️ Formulario de contacto para visitantes y usuarios autenticados.
 - 🔒 Seguridad a nivel de base de datos con **Row Level Security (RLS)**.
@@ -87,6 +90,15 @@ El script es **idempotente** y hace lo siguiente:
   - `categories`: lectura pública; escritura solo administradores.
   - `contact_messages`: inserción pública; solo admins leen.
   - `stock_movements`: solo administradores pueden leer/escribir.
+  - `orders`: el usuario lee sus propios pedidos; los admins leen todos;
+    inserción para checkout (`auth.uid() = user_id`) y para POS (solo admins).
+  - `order_items`: misma visibilidad que `orders`; escritura solo admins.
+- Crea la secuencia `order_number_seq` y la función `generate_order_number()`
+  para números de pedido con formato `PED-YYYY-XXXX`.
+- Crea el trigger `decrease_stock_on_order_item` (SECURITY DEFINER) que
+  descuenta el stock de `products` al insertar cada item de un pedido.
+- Crea las funciones RPC `create_order` y `create_pos_order`, que crean el
+  pedido y sus items en una única transacción (evita pedidos huérfanos y carreras).
 - Crea el bucket de Storage `product-images` con sus políticas.
 
 ### 2. Promocionar un administrador
@@ -221,6 +233,45 @@ reemplazarse por los IDs reales de tus productos).
 - El trigger lanza una excepción si no hay stock suficiente en una salida,
   revirtiendo la transacción completa.
 
+## Carrito, checkout y punto de venta (POS)
+
+### Carrito
+
+- **Contexto global** en `context/CartContext.tsx`, envuelto en `app/layout.tsx`
+  con `<CartProvider>`.
+- Persistido en `localStorage` bajo la clave `velasreny_cart`.
+- Ícono con badge en el `Navbar` que muestra el total de artículos y enlaza a
+  `/carrito`.
+- Página `/carrito`: editar cantidades, quitar artículos, subtotales y total.
+
+### Checkout (`/checkout`, protegido)
+
+- Solo usuarios autenticados (el `proxy` redirige a `/login`).
+- Resumen del pedido + formulario (nombre, teléfono, dirección, método de pago).
+- La Server Action `placeOrder` llama a la función RPC `create_order`, que:
+  - Verifica la sesión y valida cantidades.
+  - **Lee los precios actuales desde la base de datos** (no confía en el cliente).
+  - Bloquea cada producto con `FOR UPDATE` y valida stock (evita carreras).
+  - Inserta `orders` + `order_items` en una transacción; el trigger
+    `decrease_stock_on_order_item` descuenta el stock automáticamente.
+- Página de confirmación `/pedido-confirmado/[order_number]` con el resumen.
+
+### Punto de venta (POS)
+
+- En `/admin` → pestaña **Punto de venta**.
+- Buscador por nombre/código, ticket temporal (solo `useState`, sin persistir),
+  campo de cliente opcional y nota.
+- El botón **Cobrar** llama a la Server Action `createPosOrder`, que invoca la
+  RPC `create_pos_order` (solo administradores), creando un pedido con
+  `source='pos'` y `status='completed'`, y descuenta el stock.
+
+### Nota sobre el esquema de pedidos
+
+La columna `source` de `orders` distingue el origen de la venta:
+
+- `web`: pedidos del checkout (con `user_id`).
+- `pos`: ventas de mostrador (`user_id` nulo).
+
 ## Scripts
 
 | Comando          | Descripción                          |
@@ -246,15 +297,19 @@ en Supabase **antes** de usar la aplicación en producción.
 
 ```
 app/
-  admin/          # Panel de administración (protegido por rol)
+  admin/          # Panel de administración (protegido por rol) + POS
   auth/           # Acciones OAuth + callback de Google/Facebook
+  carrito/        # Carrito de compras
   categorias/     # Listado y detalle por categoría
+  checkout/       # Checkout (protegido) + Server Action
   contacto/       # Formulario de contacto
   login/          # Inicio de sesión
+  pedido-confirmado/ # Confirmación de pedido
   perfil/         # Perfil del usuario
   productos/      # Catálogo y detalle de producto
   register/       # Registro
-components/       # Navbar, Footer, ProductCard, AdminPanel, InventoryPanel
+components/       # Navbar, Footer, ProductCard, CartView, CheckoutForm, POSPanel...
+context/          # CartContext (estado global del carrito)
 lib/
   supabase/       # Clientes de Supabase (browser y server)
   types.ts        # Tipos compartidos
@@ -272,10 +327,14 @@ stock_movements_sample.csv  # Ejemplo de movimientos de inventario
 - El flujo OAuth redirige a rutas internas (evita *open redirects*).
 - Los movimientos de inventario solo los escriben administradores y el stock
   se actualiza en la BD (trigger), nunca desde el cliente.
+- Los pedidos se crean en el servidor vía RPC (SECURITY DEFINER); los precios
+  se leen de la BD y el stock se descuenta en la BD (trigger), nunca en el cliente.
 - Los parámetros de Supabase evitan SQL injection.
 - La `service_role key` nunca se expone al navegador.
 
 ## Notas
 
 - Los roles se gestionan manualmente por SQL (no hay UI de usuarios).
-- El carrito/compra está pendiente de implementar ("Próximamente").
+- Los pedidos POS quedan con `user_id` nulo y `source='pos'`; los del checkout
+  quedan ligados al usuario autenticado.
+- Recuerda ejecutar `bd.sql` en Supabase antes de probar el checkout o el POS.

@@ -4,20 +4,25 @@ import { useState } from "react";
 import AdminPanel from "./AdminPanel";
 import BulkUpload from "./BulkUpload";
 import InventoryPanel from "./InventoryPanel";
-import type { InventoryProduct, MovementRow } from "@/lib/types";
+import POSPanel from "./POSPanel";
+import type { InventoryProduct, MovementRow, PosProduct } from "@/lib/types";
 
 export default function AdminDashboard({
   categories,
   stats,
   products,
   movements,
+  posProducts,
 }: {
   categories: { id: number; name: string }[];
   stats: { products: number; categories: number };
   products: InventoryProduct[];
   movements: MovementRow[];
+  posProducts: PosProduct[];
 }) {
-  const [tab, setTab] = useState<"single" | "bulk" | "inventory">("single");
+  const [tab, setTab] = useState<"single" | "bulk" | "inventory" | "pos">(
+    "single"
+  );
 
   return (
     <div className="space-y-8">
@@ -73,14 +78,27 @@ export default function AdminDashboard({
           >
             Inventario
           </button>
+          <button
+            type="button"
+            onClick={() => setTab("pos")}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+              tab === "pos"
+                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                : "bg-white/70 text-gray-600 hover:bg-white"
+            }`}
+          >
+            Punto de venta
+          </button>
         </div>
 
         {tab === "single" ? (
           <AdminPanel categories={categories} />
         ) : tab === "bulk" ? (
           <BulkUpload />
-        ) : (
+        ) : tab === "inventory" ? (
           <InventoryPanel products={products} movements={movements} />
+        ) : (
+          <POSPanel products={posProducts} />
         )}
       </div>
     </div>

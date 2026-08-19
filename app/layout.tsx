@@ -2,6 +2,7 @@ import { Caveat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { CartProvider } from "@/context/CartContext";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -23,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${caveat.variable} font-sans`}>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <CartProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

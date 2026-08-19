@@ -5,6 +5,7 @@ import AdminDashboard from "@/components/AdminDashboard";
 import type {
   InventoryProduct,
   MovementRow,
+  PosProduct,
   ProductSummary,
   StockMovementType,
 } from "@/lib/types";
@@ -43,6 +44,13 @@ export default async function AdminPage() {
     .select("id, name, stock, category:categories(name)")
     .order("name")
     .returns<InventoryProduct[]>();
+
+  // ---- Punto de venta: productos ligeros (id, nombre, precio, stock) ----
+  const { data: posProducts } = await supabase
+    .from("products")
+    .select("id, name, price, stock")
+    .order("name")
+    .returns<PosProduct[]>();
 
   // ---- Inventario: últimos movimientos ----
   const { data: movements } = await supabase
@@ -103,6 +111,7 @@ export default async function AdminPage() {
           stats={{ products: productCount ?? 0, categories: categoryCount ?? 0 }}
           products={inventoryProducts ?? []}
           movements={movementRows}
+          posProducts={posProducts ?? []}
         />
 
         <div className="glass rounded-2xl p-6 shadow-xl">

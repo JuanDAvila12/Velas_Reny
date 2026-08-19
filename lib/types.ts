@@ -75,3 +75,49 @@ export interface MovementRow {
   creator_name: string;
   created_at: string;
 }
+
+/** Item del carrito de compras (persistido en localStorage). */
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+/** Estado de un pedido. */
+export type OrderStatus = "pending" | "completed" | "cancelled";
+
+/** Origen del pedido: checkout web o punto de venta. */
+export type OrderSource = "web" | "pos";
+
+export interface Order {
+  id: number;
+  order_number: string;
+  user_id: string | null;
+  status: OrderStatus;
+  source: OrderSource;
+  total: number;
+  customer_name: string | null;
+  customer_email: string | null;
+  customer_phone: string | null;
+  customer_address: string | null;
+  payment_method: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface OrderItem {
+  id: number;
+  order_id: number;
+  product_id: number;
+  product_name: string;
+  unit_price: number;
+  quantity: number;
+  subtotal: number;
+}
+
+/** Producto ligero usado por el punto de venta. */
+export interface PosProduct {
+  id: number;
+  name: string;
+  price: number | null;
+  stock: number;
+}

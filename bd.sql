@@ -384,3 +384,400 @@ create trigger trg_update_product_stock
 --   set is_admin = true
 --   where id = 'TU_USER_ID';
 
+-- =====================================================================
+-- 17) PEDIDOS (orders, order_items) — checkout web + punto de venta (POS)
+-- =====================================================================
+
+-- Secuencia global para números de pedido únicos.
+create sequence if not exists public.order_number_seq;
+grant usage, select on sequence public.order_number_seq to anon, authenticated, service_role;
+
+-- Función que genera un número de pedido con formato 'PED-YYYY-XXXX'.
+-- Es SECURITY DEFINER para que la secuencia se consuma con permisos del owner.
+create or replace function public.generate_order_number()
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  next_val bigint;
+begin
+  select nextval('public.order_number_seq') into next_val;
+  return 'PED-' || to_char(now(), 'YYYY') || '-' || lpad(next_val::text, 4, '0');
+end;
+$$;
+grant execute on function public.generate_order_number() to anon, authenticated, service_role;
+
+-- Tabla de pedidos.
+-- · source: 'web' (checkout) o 'pos' (venta en mostrador).
+-- · user_id: null para ventas POS (cliente de mostrador).
+create table if not exists public.orders (
+  id bigint generated always as identity primary key,
+  order_number text unique not null default public.generate_order_number(),
+  user_id uuid references auth.users(id) on delete set null,
+  status text not null default 'pending' check (status in ('pending','completed','cancelled')),
+  source text not null default 'web' check (source in ('web','pos')),
+  total numeric(10,2) not null check (total >= 0),
+  customer_name text,
+  customer_email text,
+  customer_phone text,
+  customer_address text,
+  payment_method text not null default 'efectivo',
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists orders_user_id_idx on public.orders (user_id);
+create index if not exists orders_created_at_idx on public.orders (created_at desc);
+
+-- Tabla de items de pedido (snapshot de nombre y precio al momento de la compra).
+create table if not exists public.order_items (
+  id bigint generated always as identity primary key,
+  order_id bigint not null references public.orders(id) on delete cascade,
+  product_id bigint not null references public.products(id),
+  product_name text not null,
+  unit_price numeric(10,2) not null check (unit_price >= 0),
+  quantity integer not null check (quantity > 0),
+  subtotal numeric(10,2) not null check (subtotal >= 0)
+);
+
+create index if not exists order_items_order_id_idx on public.order_items (order_id);
+create index if not exists order_items_product_id_idx on public.order_items (product_id);
+
+alter table public.orders enable row level security;
+alter table public.order_items enable row level security;
+
+-- Permisos explícitos para las nuevas tablas (redundante con default privileges,
+-- pero idempotente y seguro si el script se ejecuta por partes).
+grant select, insert, update, delete on public.orders to anon, authenticated, service_role;
+grant select, insert, update, delete on public.order_items to anon, authenticated, service_role;
+
+-- 18) Políticas RLS — orders
+--     · El usuario lee SOLO sus propios pedidos.
+--     · El administrador lee todos y actualiza/borra.
+--     · Inserción: el usuario inserta pedidos propios; el admin puede insertar
+--       pedidos POS (user_id null o ajeno).
+drop policy if exists orders_select_own on public.orders;
+create policy orders_select_own
+  on public.orders for select
+  to authenticated
+  using (user_id = auth.uid());
+
+drop policy if exists orders_select_admin on public.orders;
+create policy orders_select_admin
+  on public.orders for select
+  to authenticated
+  using (public.is_admin());
+
+drop policy if exists orders_insert_authenticated on public.orders;
+create policy orders_insert_authenticated
+  on public.orders for insert
+  to authenticated
+  with check (public.is_admin() or user_id = auth.uid());
+
+drop policy if exists orders_update_admin on public.orders;
+create policy orders_update_admin
+  on public.orders for update
+  to authenticated
+  using (public.is_admin())
+  with check (public.is_admin());
+
+drop policy if exists orders_delete_admin on public.orders;
+create policy orders_delete_admin
+  on public.orders for delete
+  to authenticated
+  using (public.is_admin());
+
+-- 19) Políticas RLS — order_items
+--     · Misma visibilidad que orders (por JOIN), y escritura solo admin.
+drop policy if exists order_items_select_own on public.order_items;
+create policy order_items_select_own
+  on public.order_items for select
+  to authenticated
+  using (
+    public.is_admin()
+    or exists (
+      select 1 from public.orders o
+      where o.id = order_id and o.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists order_items_insert_own on public.order_items;
+create policy order_items_insert_own
+  on public.order_items for insert
+  to authenticated
+  with check (
+    public.is_admin()
+    or exists (
+      select 1 from public.orders o
+      where o.id = order_id and o.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists order_items_update_admin on public.order_items;
+create policy order_items_update_admin
+  on public.order_items for update
+  to authenticated
+  using (public.is_admin())
+  with check (public.is_admin());
+
+drop policy if exists order_items_delete_admin on public.order_items;
+create policy order_items_delete_admin
+  on public.order_items for delete
+  to authenticated
+  using (public.is_admin());
+
+-- 20) Trigger decrease_stock_on_order_item
+--     Tras insertar un item, descuenta el stock de products de forma atómica
+--     (bloquea la fila con FOR UPDATE y lanza excepción si no hay suficiente).
+--     SECURITY DEFINER: puede actualizar products aunque el usuario no sea admin.
+create or replace function public.decrease_stock_on_order_item()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  current_stock integer;
+begin
+  select p.stock
+    into current_stock
+    from public.products p
+   where p.id = new.product_id
+   for update;
+
+  if not found then
+    raise exception 'El producto % no existe.', new.product_id;
+  end if;
+
+  if current_stock < new.quantity then
+    raise exception 'Stock insuficiente para el producto %: disponible %.',
+      new.product_id, current_stock;
+  end if;
+
+  update public.products
+     set stock = current_stock - new.quantity,
+         updated_at = now()
+   where id = new.product_id;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_decrease_stock_on_order_item on public.order_items;
+create trigger trg_decrease_stock_on_order_item
+  after insert on public.order_items
+  for each row execute function public.decrease_stock_on_order_item();
+
+-- =====================================================================
+-- 21) Funciones RPC transaccionales para crear pedidos.
+--     Hacen TODO en una única transacción (validar stock con FOR UPDATE,
+--     crear el pedido y sus items) de modo que si el trigger lanza una
+--     excepción (stock insuficiente) se revierte también el pedido,
+--     evitando pedidos "huérfanos". El precio siempre se lee de la BD,
+--     nunca del cliente.
+-- =====================================================================
+
+-- Pedido web (checkout): requiere sesión (auth.uid()) y crea el pedido a su nombre.
+create or replace function public.create_order(
+  p_items jsonb,
+  p_customer_name text,
+  p_customer_phone text,
+  p_customer_address text,
+  p_customer_email text,
+  p_payment_method text
+)
+returns text
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_order_id bigint;
+  v_order_number text;
+  v_total numeric(10,2) := 0;
+  item record;
+  v_name text;
+  v_price numeric(10,2);
+  v_stock integer;
+  v_subtotal numeric(10,2);
+begin
+  if v_user_id is null then
+    raise exception 'No autenticado';
+  end if;
+
+  if p_items is null or jsonb_array_length(p_items) = 0 then
+    raise exception 'El carrito esta vacio.';
+  end if;
+
+  -- 1) Validar stock y precio, calcular total (bloqueando cada producto).
+  for item in
+    select
+      (e->>'product_id')::bigint as product_id,
+      (e->>'quantity')::int as quantity
+    from jsonb_array_elements(p_items) as e
+  loop
+    if item.quantity is null or item.quantity <= 0 then
+      raise exception 'Cantidad invalida para el producto %.', item.product_id;
+    end if;
+
+    select p.name, p.price, p.stock
+      into v_name, v_price, v_stock
+      from public.products p
+     where p.id = item.product_id
+     for update;
+
+    if not found then
+      raise exception 'El producto % no existe.', item.product_id;
+    end if;
+
+    if v_price is null then
+      raise exception 'El producto % no tiene precio.', item.product_id;
+    end if;
+
+    if v_stock < item.quantity then
+      raise exception 'Stock insuficiente para el producto %.', item.product_id;
+    end if;
+
+    v_subtotal := round(v_price * item.quantity, 2);
+    v_total := v_total + v_subtotal;
+  end loop;
+
+  -- 2) Crear el pedido (el default genera el order_number).
+  insert into public.orders (
+    user_id, status, source, total,
+    customer_name, customer_email, customer_phone, customer_address,
+    payment_method
+  ) values (
+    v_user_id, 'pending', 'web', v_total,
+    nullif(p_customer_name, ''), nullif(p_customer_email, ''),
+    nullif(p_customer_phone, ''), nullif(p_customer_address, ''),
+    p_payment_method
+  )
+  returning id, order_number into v_order_id, v_order_number;
+
+  -- 3) Insertar items (el trigger descuenta el stock).
+  for item in
+    select
+      (e->>'product_id')::bigint as product_id,
+      (e->>'quantity')::int as quantity
+    from jsonb_array_elements(p_items) as e
+  loop
+    select p.name, p.price into v_name, v_price
+      from public.products p
+     where p.id = item.product_id;
+
+    v_subtotal := round(v_price * item.quantity, 2);
+
+    insert into public.order_items (
+      order_id, product_id, product_name, unit_price, quantity, subtotal
+    ) values (
+      v_order_id, item.product_id, v_name, v_price, item.quantity, v_subtotal
+    );
+  end loop;
+
+  return v_order_number;
+end;
+$$;
+grant execute on function public.create_order(jsonb, text, text, text, text, text) to authenticated;
+
+-- Pedido POS: solo administradores. Crea un pedido de mostrador (user_id null,
+-- source 'pos', status 'completed').
+create or replace function public.create_pos_order(
+  p_items jsonb,
+  p_customer_name text,
+  p_notes text
+)
+returns text
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_order_id bigint;
+  v_order_number text;
+  v_total numeric(10,2) := 0;
+  item record;
+  v_name text;
+  v_price numeric(10,2);
+  v_stock integer;
+  v_subtotal numeric(10,2);
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado';
+  end if;
+
+  if p_items is null or jsonb_array_length(p_items) = 0 then
+    raise exception 'El ticket esta vacio.';
+  end if;
+
+  -- 1) Validar stock y precio, calcular total (bloqueando cada producto).
+  for item in
+    select
+      (e->>'product_id')::bigint as product_id,
+      (e->>'quantity')::int as quantity
+    from jsonb_array_elements(p_items) as e
+  loop
+    if item.quantity is null or item.quantity <= 0 then
+      raise exception 'Cantidad invalida para el producto %.', item.product_id;
+    end if;
+
+    select p.name, p.price, p.stock
+      into v_name, v_price, v_stock
+      from public.products p
+     where p.id = item.product_id
+     for update;
+
+    if not found then
+      raise exception 'El producto % no existe.', item.product_id;
+    end if;
+
+    if v_price is null then
+      raise exception 'El producto % no tiene precio.', item.product_id;
+    end if;
+
+    if v_stock < item.quantity then
+      raise exception 'Stock insuficiente para el producto %.', item.product_id;
+    end if;
+
+    v_subtotal := round(v_price * item.quantity, 2);
+    v_total := v_total + v_subtotal;
+  end loop;
+
+  -- 2) Crear el pedido POS.
+  insert into public.orders (
+    user_id, status, source, total,
+    customer_name, payment_method, notes
+  ) values (
+    null, 'completed', 'pos', v_total,
+    nullif(p_customer_name, ''), 'efectivo', nullif(p_notes, '')
+  )
+  returning id, order_number into v_order_id, v_order_number;
+
+  -- 3) Insertar items (el trigger descuenta el stock).
+  for item in
+    select
+      (e->>'product_id')::bigint as product_id,
+      (e->>'quantity')::int as quantity
+    from jsonb_array_elements(p_items) as e
+  loop
+    select p.name, p.price into v_name, v_price
+      from public.products p
+     where p.id = item.product_id;
+
+    v_subtotal := round(v_price * item.quantity, 2);
+
+    insert into public.order_items (
+      order_id, product_id, product_name, unit_price, quantity, subtotal
+    ) values (
+      v_order_id, item.product_id, v_name, v_price, item.quantity, v_subtotal
+    );
+  end loop;
+
+  return v_order_number;
+end;
+$$;
+grant execute on function public.create_pos_order(jsonb, text, text) to authenticated;
+

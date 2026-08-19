@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import type { Product } from "@/lib/types";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const outOfStock = product.stock != null && product.stock <= 0;
+
   const chips = [
     product.aroma && `Aroma: ${product.aroma}`,
     product.color && `Color: ${product.color}`,
@@ -9,9 +18,16 @@ export default function ProductCard({ product }: { product: Product }) {
     product.intensidad && product.intensidad,
   ].filter(Boolean) as string[];
 
+  function handleAdd() {
+    if (outOfStock) return;
+    addToCart(product, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1200);
+  }
+
   return (
-    <Link href={`/productos/${product.slug}`} className="group animate-fade-up">
-      <div className="overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
+    <div className="group flex animate-fade-up flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <Link href={`/productos/${product.slug}`} className="flex flex-col">
         <div className="relative h-48 overflow-hidden">
           <img
             src={product.image_url || "/placeholder-vela.jpg"}
@@ -19,9 +35,9 @@ export default function ProductCard({ product }: { product: Product }) {
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-          {product.stock != null && product.stock <= 0 && (
+          {outOfStock && (
             <span className="absolute left-3 top-3 z-10 rounded-full bg-red-500/90 px-3 py-1 text-xs font-bold text-white shadow">
-              Agotado
+              Sin stock
             </span>
           )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -31,7 +47,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="flex flex-1 flex-col p-4">
           <h3 className="font-caveat text-2xl text-reny-purple-dark">
             {product.name}
           </h3>
@@ -49,7 +65,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
           )}
 
-          <div className="mt-3 flex items-center justify-between">
+          <div className="mt-auto flex items-center justify-between pt-3">
             <p className="text-gradient text-lg font-bold">
               ${product.price ?? "—"}
             </p>
@@ -60,7 +76,24 @@ export default function ProductCard({ product }: { product: Product }) {
             )}
           </div>
         </div>
+      </Link>
+
+      <div className="px-4 pb-4">
+        <button
+          type="button"
+          onClick={handleAdd}
+          disabled={outOfStock}
+          className={`w-full rounded-lg py-2 text-sm font-bold transition ${
+            outOfStock
+              ? "cursor-not-allowed bg-gray-300 text-gray-500"
+              : added
+                ? "bg-reny-green text-reny-purple-dark"
+                : "bg-gradient-to-r from-reny-purple to-reny-pink text-white hover:opacity-90"
+          }`}
+        >
+          {outOfStock ? "Sin stock" : added ? "¡Agregado!" : "Agregar al carrito"}
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
