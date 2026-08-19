@@ -9,7 +9,7 @@ export default async function Home() {
     .from("products")
     .select("*, category:categories(name)")
     .eq("is_featured", true)
-    .limit(4);
+    .limit(6);
 
   const { data: categories } = await supabase
     .from("categories")
