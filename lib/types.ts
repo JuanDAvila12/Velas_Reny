@@ -33,6 +33,25 @@ export interface ProductSummary {
   category?: { name: string } | null;
 }
 
+/** Producto completo para el panel de administración (listado y edición). */
+export interface AdminProduct {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  price: number | null;
+  stock: number;
+  category_id: number | null;
+  aroma: string | null;
+  color: string | null;
+  tamano: string | null;
+  intensidad: string | null;
+  image_url: string | null;
+  is_featured: boolean;
+  created_at: string;
+  category?: { name: string } | null;
+}
+
 export interface Profile {
   id: string;
   full_name: string | null;

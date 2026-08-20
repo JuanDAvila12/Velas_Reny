@@ -1,28 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import AdminPanel from "./AdminPanel";
 import BulkUpload from "./BulkUpload";
 import InventoryPanel from "./InventoryPanel";
 import POSPanel from "./POSPanel";
-import type { InventoryProduct, MovementRow, PosProduct } from "@/lib/types";
+import ProductsPanel from "./ProductsPanel";
+import type {
+  AdminProduct,
+  InventoryProduct,
+  MovementRow,
+  PosProduct,
+} from "@/lib/types";
+
+type Tab = "single" | "products" | "bulk" | "inventory" | "pos";
 
 export default function AdminDashboard({
   categories,
   stats,
   products,
+  adminProducts,
   movements,
   posProducts,
 }: {
   categories: { id: number; name: string }[];
   stats: { products: number; categories: number };
   products: InventoryProduct[];
+  adminProducts: AdminProduct[];
   movements: MovementRow[];
   posProducts: PosProduct[];
 }) {
-  const [tab, setTab] = useState<"single" | "bulk" | "inventory" | "pos">(
-    "single"
+  const router = useRouter();
+  const [tab, setTab] = useState<Tab>("single");
+  const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(
+    null
   );
+
+  const handleSaved = useCallback(() => {
+    router.refresh();
+  }, [router]);
+
+  function handleEdit(product: AdminProduct) {
+    setEditingProduct(product);
+    setTab("single");
+  }
+
+  function handleCancelEdit() {
+    setEditingProduct(null);
+    setTab("products");
+  }
 
   return (
     <div className="space-y-8">
@@ -55,6 +82,17 @@ export default function AdminDashboard({
             }`}
           >
             Agregar producto
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("products")}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+              tab === "products"
+                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                : "bg-white/70 text-gray-600 hover:bg-white"
+            }`}
+          >
+            Productos
           </button>
           <button
             type="button"
@@ -92,7 +130,14 @@ export default function AdminDashboard({
         </div>
 
         {tab === "single" ? (
-          <AdminPanel categories={categories} />
+          <AdminPanel
+            categories={categories}
+            product={editingProduct}
+            onSaved={handleSaved}
+            onCancelEdit={handleCancelEdit}
+          />
+        ) : tab === "products" ? (
+          <ProductsPanel products={adminProducts} onEdit={handleEdit} />
         ) : tab === "bulk" ? (
           <BulkUpload />
         ) : tab === "inventory" ? (

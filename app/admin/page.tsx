@@ -3,10 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/supabase/admin";
 import AdminDashboard from "@/components/AdminDashboard";
 import type {
+  AdminProduct,
   InventoryProduct,
   MovementRow,
   PosProduct,
-  ProductSummary,
   StockMovementType,
 } from "@/lib/types";
 
@@ -30,13 +30,13 @@ export default async function AdminPage() {
     .from("categories")
     .select("*", { count: "exact", head: true });
 
-  const { data: products } = await supabase
+  const { data: adminProducts } = await supabase
     .from("products")
     .select(
-      "id, name, slug, price, image_url, is_featured, category:categories(name)"
+      "id, name, slug, description, price, stock, category_id, aroma, color, tamano, intensidad, image_url, is_featured, created_at, category:categories(name)"
     )
     .order("created_at", { ascending: false })
-    .returns<ProductSummary[]>();
+    .returns<AdminProduct[]>();
 
   // ---- Inventario: stock actual por producto ----
   const { data: inventoryProducts } = await supabase
@@ -110,40 +110,11 @@ export default async function AdminPage() {
           categories={categories ?? []}
           stats={{ products: productCount ?? 0, categories: categoryCount ?? 0 }}
           products={inventoryProducts ?? []}
+          adminProducts={adminProducts ?? []}
           movements={movementRows}
           posProducts={posProducts ?? []}
         />
 
-        <div className="glass rounded-2xl p-6 shadow-xl">
-          <h2 className="mb-4 text-2xl font-caveat text-reny-purple-dark">
-            Productos existentes ({products?.length ?? 0})
-          </h2>
-          {products && products.length > 0 ? (
-            <ul className="divide-y divide-gray-100">
-              {products.map((p) => (
-                <li key={p.id} className="flex items-center gap-4 py-3">
-                  <img
-                    src={p.image_url || "/placeholder-vela.jpg"}
-                    alt={p.name}
-                    className="h-12 w-12 rounded-lg object-cover"
-                  />
-                  <div className="flex-1">
-                    <p className="font-medium">{p.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {p.category?.name ?? "Sin categoría"}
-                      {p.is_featured ? " · Destacado" : ""}
-                    </p>
-                  </div>
-                  <p className="font-bold text-reny-pink-dark">
-                    ${p.price ?? "—"}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray-500">Aún no hay productos.</p>
-          )}
-        </div>
       </div>
     </div>
   );

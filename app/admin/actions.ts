@@ -23,7 +23,20 @@ function slugify(text: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-export async function createProduct(
+/** Extrae la ruta del archivo dentro del bucket a partir de una URL pública. */
+function extractStoragePath(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const marker = "/product-images/";
+  const idx = url.indexOf(marker);
+  if (idx === -1) return null;
+  return url.slice(idx + marker.length).split("?")[0];
+}
+
+/**
+ * Crea o actualiza un producto según exista (o no) el campo oculto "id".
+ * Reutiliza la misma validación y lógica de subida de imagen para ambos casos.
+ */
+export async function saveProduct(
   _prevState: AdminActionState,
   formData: FormData
 ): Promise<AdminActionState> {
@@ -34,7 +47,12 @@ export async function createProduct(
 
   const supabase = await createClient();
 
-  // 2) Lectura y saneado de campos.
+  // 2) Identificar si es creación o edición.
+  const idRaw = (formData.get("id") as string)?.trim();
+  const id = idRaw ? Number(idRaw) : null;
+  const isUpdate = id !== null && Number.isInteger(id) && id > 0;
+
+  // 3) Lectura y saneado de campos.
   const name = (formData.get("name") as string)?.trim();
   const slugInput = (formData.get("slug") as string)?.trim();
   const slug = slugInput || slugify(name);
@@ -48,8 +66,10 @@ export async function createProduct(
   const intensidad = (formData.get("intensidad") as string)?.trim() || null;
   const isFeatured = formData.get("is_featured") === "on";
   const image = formData.get("image") as File | null;
+  const currentImageUrl =
+    (formData.get("current_image_url") as string)?.trim() || null;
 
-  // 3) Validación de tipos y reglas de negocio.
+  // 4) Validación de tipos y reglas de negocio.
   if (!name) return { error: "El nombre es obligatorio." };
   if (name.length < 3) {
     return { error: "El nombre debe tener al menos 3 caracteres." };
@@ -68,19 +88,20 @@ export async function createProduct(
 
   const categoryId = categoryIdRaw ? Number(categoryIdRaw) : null;
 
-  // 4) Validar que el slug no esté en uso.
-  const { data: existing } = await supabase
-    .from("products")
-    .select("id")
-    .eq("slug", slug)
-    .maybeSingle();
+  // 5) Validar que el slug no esté en uso (excluyendo el propio producto al editar).
+  let slugQuery = supabase.from("products").select("id").eq("slug", slug);
+  if (isUpdate && id !== null) {
+    slugQuery = slugQuery.neq("id", id);
+  }
+  const { data: existing } = await slugQuery.maybeSingle();
 
   if (existing) {
     return { error: "Ya existe un producto con ese slug. Usa otro." };
   }
 
-  // 5) Subida de imagen a Supabase Storage (bucket "product-images").
+  // 6) Subida de imagen (solo si se seleccionó una nueva).
   let imageUrl: string | null = null;
+  let newImagePath: string | null = null;
 
   if (image && image.size > 0) {
     if (!ALLOWED_IMAGE_TYPES.includes(image.type)) {
@@ -105,10 +126,10 @@ export async function createProduct(
       .from("product-images")
       .getPublicUrl(filePath);
     imageUrl = publicUrlData.publicUrl;
+    newImagePath = filePath;
   }
 
-  // 6) Inserción (los parámetros evitan SQL injection).
-  const { error: insertError } = await supabase.from("products").insert({
+  const payload = {
     name,
     slug,
     description,
@@ -120,17 +141,50 @@ export async function createProduct(
     tamano,
     intensidad,
     is_featured: isFeatured,
-    image_url: imageUrl,
-  });
+  };
 
-  if (insertError) {
-    return { error: `Error al crear el producto: ${insertError.message}` };
+  // 7) Crear o actualizar.
+  if (isUpdate && id !== null) {
+    const updatePayload: Record<string, unknown> = { ...payload };
+    if (imageUrl) {
+      updatePayload.image_url = imageUrl;
+    }
+
+    const { error: updateError } = await supabase
+      .from("products")
+      .update(updatePayload)
+      .eq("id", id);
+
+    if (updateError) {
+      return { error: `Error al actualizar el producto: ${updateError.message}` };
+    }
+
+    // Borrar la imagen anterior del bucket solo si se subió una nueva.
+    if (newImagePath) {
+      const oldPath = extractStoragePath(currentImageUrl);
+      if (oldPath) {
+        await supabase.storage.from("product-images").remove([oldPath]);
+      }
+    }
+  } else {
+    const { error: insertError } = await supabase
+      .from("products")
+      .insert({ ...payload, image_url: imageUrl });
+
+    if (insertError) {
+      return { error: `Error al crear el producto: ${insertError.message}` };
+    }
   }
 
-  // 7) Revalidar las rutas que muestran productos.
+  // 8) Revalidar las rutas que muestran productos.
   revalidatePath("/");
   revalidatePath("/productos");
+  revalidatePath("/productos/[slug]", "page");
   revalidatePath("/admin");
 
-  return { success: "Producto creado correctamente." };
+  return {
+    success: isUpdate
+      ? "Producto actualizado correctamente."
+      : "Producto creado correctamente.",
+  };
 }
