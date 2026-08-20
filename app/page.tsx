@@ -45,7 +45,7 @@ export default async function Home() {
       </section>
 
       {/* Categorías */}
-      <section className="mx-auto max-w-6xl px-4 py-12">
+      <section className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="mb-6 text-center text-3xl font-caveat text-reny-purple-dark">
           Categorías
         </h2>
@@ -63,7 +63,7 @@ export default async function Home() {
       </section>
 
       {/* Productos destacados */}
-      <section className="mx-auto max-w-6xl px-4 py-12">
+      <section className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="mb-6 text-center text-3xl font-caveat text-reny-purple-dark">
           Destacados
         </h2>
