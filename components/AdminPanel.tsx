@@ -17,10 +17,10 @@ export default function AdminPanel({
   return (
     <div className="space-y-4">
       {product && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-reny-purple/40 bg-white/60 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-reni-purple/40 bg-white/60 p-4">
           <p className="text-sm text-gray-600">
             Editando:{" "}
-            <span className="font-semibold text-reny-purple-dark">
+            <span className="font-semibold text-reni-purple-dark">
               {product.name}
             </span>
           </p>

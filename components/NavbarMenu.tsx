@@ -14,7 +14,7 @@ function CartIcon({ count }: { count: number }) {
   return (
     <Link
       href="/carrito"
-      className="relative rounded-full bg-white/80 p-2 text-reny-purple-dark shadow transition hover:bg-white"
+      className="relative rounded-full bg-white/80 p-2 text-reni-purple-dark shadow transition hover:bg-white"
       aria-label="Ver carrito de compras"
     >
       <svg
@@ -33,7 +33,7 @@ function CartIcon({ count }: { count: number }) {
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
       </svg>
       {count > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-reny-pink-dark px-1 text-xs font-bold text-white">
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-reni-pink-dark px-1 text-xs font-bold text-white">
           {count > 99 ? "99+" : count}
         </span>
       )}
@@ -56,9 +56,9 @@ export default function NavbarMenu({
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link
           href="/"
-          className="text-3xl font-caveat text-reny-purple-dark drop-shadow"
+          className="text-3xl font-caveat text-reni-purple-dark drop-shadow"
         >
-          Velas Reny
+          Velas Reni
         </Link>
 
         {/* Escritorio */}
@@ -67,16 +67,16 @@ export default function NavbarMenu({
             <Link
               key={l.href}
               href={l.href}
-              className="group relative text-sm font-medium text-reny-purple-dark transition hover:text-reny-pink-dark"
+              className="group relative text-sm font-medium text-reni-purple-dark transition hover:text-reni-pink-dark"
             >
               {l.label}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 rounded bg-reny-pink-dark transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 h-0.5 w-0 rounded bg-reni-pink-dark transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
           {isAdmin && (
             <Link
               href="/admin"
-              className="rounded-full bg-white/80 px-3 py-1 text-sm font-bold text-reny-purple-dark shadow transition hover:bg-white"
+              className="rounded-full bg-white/80 px-3 py-1 text-sm font-bold text-reni-purple-dark shadow transition hover:bg-white"
             >
               Admin
             </Link>
@@ -85,14 +85,14 @@ export default function NavbarMenu({
           {isLoggedIn ? (
             <Link
               href="/perfil"
-              className="rounded-full bg-gradient-to-r from-reny-purple to-reny-pink px-4 py-1.5 text-sm font-bold text-white shadow transition hover:opacity-90"
+              className="rounded-full bg-gradient-to-r from-reni-purple to-reni-pink px-4 py-1.5 text-sm font-bold text-white shadow transition hover:opacity-90"
             >
               Mi cuenta
             </Link>
           ) : (
             <Link
               href="/login"
-              className="rounded-full bg-gradient-to-r from-reny-purple to-reny-pink px-4 py-1.5 text-sm font-bold text-white shadow transition hover:opacity-90"
+              className="rounded-full bg-gradient-to-r from-reni-purple to-reni-pink px-4 py-1.5 text-sm font-bold text-white shadow transition hover:opacity-90"
             >
               Ingresar
             </Link>
@@ -105,7 +105,7 @@ export default function NavbarMenu({
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="rounded-lg p-2 text-reny-purple-dark"
+            className="rounded-lg p-2 text-reni-purple-dark"
             aria-label="Abrir menú"
             aria-expanded={open}
           >
@@ -137,7 +137,7 @@ export default function NavbarMenu({
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="text-reny-purple-dark transition hover:text-reny-pink-dark"
+                className="text-reni-purple-dark transition hover:text-reni-pink-dark"
               >
                 {l.label}
               </Link>
@@ -146,7 +146,7 @@ export default function NavbarMenu({
               <Link
                 href="/admin"
                 onClick={() => setOpen(false)}
-                className="font-bold text-reny-purple-dark"
+                className="font-bold text-reni-purple-dark"
               >
                 Admin
               </Link>
@@ -155,7 +155,7 @@ export default function NavbarMenu({
               <Link
                 href="/perfil"
                 onClick={() => setOpen(false)}
-                className="font-bold text-reny-pink-dark"
+                className="font-bold text-reni-pink-dark"
               >
                 Mi cuenta
               </Link>
@@ -163,7 +163,7 @@ export default function NavbarMenu({
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="font-bold text-reny-pink-dark"
+                className="font-bold text-reni-pink-dark"
               >
                 Ingresar
               </Link>

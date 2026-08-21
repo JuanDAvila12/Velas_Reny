@@ -2,13 +2,13 @@
 
 @theme {
   /* Paleta personalizada de la marca */
-  --color-reny-purple: #D8B4FE; /* lila pastel */
-  --color-reny-purple-dark: #A78BFA;
-  --color-reny-pink: #F9A8D4;
-  --color-reny-pink-dark: #F472B6;
-  --color-reny-green: #BBF7D0;
-  --color-reny-green-dark: #86EFAC;
-  --color-reny-cream: #FFF7ED;
+  --color-reni-purple: #D8B4FE; /* lila pastel */
+  --color-reni-purple-dark: #A78BFA;
+  --color-reni-pink: #F9A8D4;
+  --color-reni-pink-dark: #F472B6;
+  --color-reni-green: #BBF7D0;
+  --color-reni-green-dark: #86EFAC;
+  --color-reni-cream: #FFF7ED;
 }
 
 @theme inline {

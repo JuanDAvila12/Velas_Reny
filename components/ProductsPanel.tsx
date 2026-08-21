@@ -38,7 +38,7 @@ export default function ProductsPanel({
   return (
     <div className="animate-fade-in space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-2xl font-caveat text-reny-purple-dark">
+        <h3 className="text-2xl font-caveat text-reni-purple-dark">
           Productos ({filtered.length})
         </h3>
         <input
@@ -46,7 +46,7 @@ export default function ProductsPanel({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar por nombre o slug..."
-          className="w-full max-w-xs rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          className="w-full max-w-xs rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
         />
       </div>
 
@@ -80,7 +80,7 @@ export default function ProductsPanel({
                     <p className="font-medium">{p.name}</p>
                     <p className="text-xs text-gray-500">/{p.slug}</p>
                   </td>
-                  <td className="px-4 py-2 text-right font-bold text-reny-pink-dark">
+                  <td className="px-4 py-2 text-right font-bold text-reni-pink-dark">
                     ${p.price ?? "—"}
                   </td>
                   <td className="px-4 py-2 text-right">
@@ -102,7 +102,7 @@ export default function ProductsPanel({
                       <button
                         type="button"
                         onClick={() => onEdit(p)}
-                        className="rounded-lg bg-reny-purple px-3 py-1.5 text-xs font-bold text-white transition hover:bg-reny-purple-dark"
+                        className="rounded-lg bg-reni-purple px-3 py-1.5 text-xs font-bold text-white transition hover:bg-reni-purple-dark"
                       >
                         Editar
                       </button>

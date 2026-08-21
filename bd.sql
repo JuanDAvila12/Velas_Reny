@@ -1,5 +1,5 @@
 -- =====================================================================
--- Velas Reny — Esquema, Seguridad (RLS), Trigger y Storage
+-- Velas Reni — Esquema, Seguridad (RLS), Trigger y Storage
 -- Ejecuta este script COMPLETO en el SQL Editor de Supabase.
 -- Es idempotente: puedes volver a ejecutarlo sin romper nada.
 -- =====================================================================

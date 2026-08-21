@@ -103,7 +103,7 @@ export default async function ProductosPage({
         <select
           name="categoria"
           defaultValue={categoria ?? ""}
-          className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
         >
           <option value="">Todas</option>
           {categories?.map((c) => (
@@ -118,7 +118,7 @@ export default async function ProductosPage({
         <select
           name="aroma"
           defaultValue={aroma ?? ""}
-          className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
         >
           <option value="">Todos</option>
           {distinctAromas.map((a) => (
@@ -133,7 +133,7 @@ export default async function ProductosPage({
         <select
           name="orden"
           defaultValue={ordenValue}
-          className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
         >
           {SORT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
@@ -144,14 +144,14 @@ export default async function ProductosPage({
       </div>
       <button
         type="submit"
-        className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink px-6 py-3 font-bold text-white transition hover:opacity-90"
+        className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink px-6 py-3 font-bold text-white transition hover:opacity-90"
       >
         Aplicar
       </button>
       {(categoria || aroma || ordenValue !== "recientes") && (
         <Link
           href="/productos"
-          className="block rounded-lg px-4 py-2 text-center text-sm text-reny-pink-dark underline"
+          className="block rounded-lg px-4 py-2 text-center text-sm text-reni-pink-dark underline"
         >
           Limpiar filtros
         </Link>
@@ -161,14 +161,14 @@ export default async function ProductosPage({
 
   return (
     <div className="min-h-screen px-4 py-12 md:px-6">
-      <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
+      <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reni-purple-dark">
         Nuestras velas
       </h1>
 
       <div className="mx-auto max-w-7xl gap-8 lg:grid lg:grid-cols-[240px_1fr]">
         {/* Barra lateral (desktop) */}
         <aside className="glass hidden h-fit rounded-2xl p-5 shadow lg:block">
-          <h2 className="mb-4 text-xl font-caveat text-reny-purple-dark">
+          <h2 className="mb-4 text-xl font-caveat text-reni-purple-dark">
             Filtros
           </h2>
           {filterForm}
@@ -176,7 +176,7 @@ export default async function ProductosPage({
 
         {/* Filtros colapsables (móvil) */}
         <details className="glass mb-6 rounded-2xl p-4 shadow lg:hidden">
-          <summary className="cursor-pointer font-caveat text-xl text-reny-purple-dark">
+          <summary className="cursor-pointer font-caveat text-xl text-reni-purple-dark">
             Filtros y orden
           </summary>
           <div className="mt-4">{filterForm}</div>
@@ -209,7 +209,7 @@ export default async function ProductosPage({
                     orden: ordenValue,
                     pagina: currentPage - 1,
                   })}
-                  className="rounded-lg bg-white/80 px-4 py-2 text-sm font-semibold text-reny-purple-dark shadow transition hover:bg-white"
+                  className="rounded-lg bg-white/80 px-4 py-2 text-sm font-semibold text-reni-purple-dark shadow transition hover:bg-white"
                 >
                   ← Anterior
                 </Link>
@@ -231,7 +231,7 @@ export default async function ProductosPage({
                     orden: ordenValue,
                     pagina: currentPage + 1,
                   })}
-                  className="rounded-lg bg-white/80 px-4 py-2 text-sm font-semibold text-reny-purple-dark shadow transition hover:bg-white"
+                  className="rounded-lg bg-white/80 px-4 py-2 text-sm font-semibold text-reni-purple-dark shadow transition hover:bg-white"
                 >
                   Siguiente →
                 </Link>

@@ -56,13 +56,13 @@ export default function AdminDashboard({
       {/* Estadísticas */}
       <div className="grid grid-cols-2 gap-4">
         <div className="glass rounded-2xl p-6 text-center shadow-sm">
-          <p className="text-4xl font-bold text-reny-purple-dark">
+          <p className="text-4xl font-bold text-reni-purple-dark">
             {stats.products}
           </p>
           <p className="text-sm text-gray-500">Productos</p>
         </div>
         <div className="glass rounded-2xl p-6 text-center shadow-sm">
-          <p className="text-4xl font-bold text-reny-purple-dark">
+          <p className="text-4xl font-bold text-reni-purple-dark">
             {stats.categories}
           </p>
           <p className="text-sm text-gray-500">Categorías</p>
@@ -77,7 +77,7 @@ export default function AdminDashboard({
             onClick={() => setTab("single")}
             className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
               tab === "single"
-                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                ? "bg-gradient-to-r from-reni-purple to-reni-pink text-white shadow"
                 : "bg-white/70 text-gray-600 hover:bg-white"
             }`}
           >
@@ -88,7 +88,7 @@ export default function AdminDashboard({
             onClick={() => setTab("products")}
             className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
               tab === "products"
-                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                ? "bg-gradient-to-r from-reni-purple to-reni-pink text-white shadow"
                 : "bg-white/70 text-gray-600 hover:bg-white"
             }`}
           >
@@ -99,7 +99,7 @@ export default function AdminDashboard({
             onClick={() => setTab("bulk")}
             className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
               tab === "bulk"
-                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                ? "bg-gradient-to-r from-reni-purple to-reni-pink text-white shadow"
                 : "bg-white/70 text-gray-600 hover:bg-white"
             }`}
           >
@@ -110,7 +110,7 @@ export default function AdminDashboard({
             onClick={() => setTab("inventory")}
             className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
               tab === "inventory"
-                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                ? "bg-gradient-to-r from-reni-purple to-reni-pink text-white shadow"
                 : "bg-white/70 text-gray-600 hover:bg-white"
             }`}
           >
@@ -121,7 +121,7 @@ export default function AdminDashboard({
             onClick={() => setTab("pos")}
             className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
               tab === "pos"
-                ? "bg-gradient-to-r from-reny-purple to-reny-pink text-white shadow"
+                ? "bg-gradient-to-r from-reni-purple to-reni-pink text-white shadow"
                 : "bg-white/70 text-gray-600 hover:bg-white"
             }`}
           >

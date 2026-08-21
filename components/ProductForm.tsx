@@ -8,7 +8,7 @@ import type { AdminProduct } from "@/lib/types";
 const initialState: AdminActionState = {};
 
 const inputClass =
-  "w-full p-3 border border-reny-purple rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-reny-pink";
+  "w-full p-3 border border-reni-purple rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-reni-pink";
 
 const labelClass =
   "block w-full md:w-48 shrink-0 text-sm font-medium text-gray-700 text-left md:text-right";
@@ -261,7 +261,7 @@ export default function ProductForm({
               name="is_featured"
               type="checkbox"
               defaultChecked={product?.is_featured ?? false}
-              className="h-4 w-4 accent-reny-purple"
+              className="h-4 w-4 accent-reni-purple"
             />
             <label htmlFor="is_featured" className="text-sm text-gray-700">
               Destacar en la página de inicio
@@ -279,7 +279,7 @@ export default function ProductForm({
             type="file"
             accept="image/jpeg,image/png,image/webp"
             onChange={handleImageChange}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-reny-purple file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-reny-purple-dark"
+            className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-reni-purple file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-reni-purple-dark"
           />
           {preview ? (
             <img
@@ -307,7 +307,7 @@ export default function ProductForm({
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-reny-purple py-3 font-bold text-white transition hover:bg-reny-purple-dark disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg bg-reni-purple py-3 font-bold text-white transition hover:bg-reni-purple-dark disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending
             ? isEditing

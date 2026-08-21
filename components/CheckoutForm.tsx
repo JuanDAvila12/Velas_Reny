@@ -9,7 +9,7 @@ import { placeOrder, type CheckoutState } from "@/app/checkout/actions";
 const initialState: CheckoutState = {};
 
 const inputClass =
-  "w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink";
+  "w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink";
 
 export default function CheckoutForm({
   profile,
@@ -40,13 +40,13 @@ export default function CheckoutForm({
     return (
       <div className="min-h-screen px-4 py-12">
         <div className="glass mx-auto max-w-xl animate-fade-up rounded-2xl p-8 text-center shadow-xl">
-          <h1 className="mb-4 text-3xl font-caveat text-reny-purple-dark">
+          <h1 className="mb-4 text-3xl font-caveat text-reni-purple-dark">
             Finalizar pedido
           </h1>
           <p className="mb-6 text-gray-600">No tienes productos en el carrito.</p>
           <Link
             href="/productos"
-            className="inline-block rounded-full bg-gradient-to-r from-reny-purple to-reny-pink px-8 py-3 font-bold text-white shadow transition hover:-translate-y-0.5"
+            className="inline-block rounded-full bg-gradient-to-r from-reni-purple to-reni-pink px-8 py-3 font-bold text-white shadow transition hover:-translate-y-0.5"
           >
             Ver catálogo
           </Link>
@@ -60,7 +60,7 @@ export default function CheckoutForm({
       <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
         {/* Resumen del pedido */}
         <div className="glass h-fit rounded-2xl p-6 shadow-xl">
-          <h2 className="mb-4 text-2xl font-caveat text-reny-purple-dark">
+          <h2 className="mb-4 text-2xl font-caveat text-reni-purple-dark">
             Resumen del pedido
           </h2>
           <ul className="divide-y divide-gray-100">
@@ -86,7 +86,7 @@ export default function CheckoutForm({
 
         {/* Formulario de envío */}
         <form action={formAction} className="glass rounded-2xl p-6 shadow-xl">
-          <h2 className="mb-4 text-2xl font-caveat text-reny-purple-dark">
+          <h2 className="mb-4 text-2xl font-caveat text-reni-purple-dark">
             Datos de envío
           </h2>
 
@@ -149,7 +149,7 @@ export default function CheckoutForm({
             <button
               type="submit"
               disabled={pending}
-              className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white shadow transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white shadow transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {pending ? "Procesando..." : "Confirmar pedido"}
             </button>

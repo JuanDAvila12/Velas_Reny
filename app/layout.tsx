@@ -6,7 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Velas Reny | Velas artesanales",
+  title: "Velas Reni | Velas artesanales",
   description:
     "Catálogo de velas artesanales de cera de soya natural para iluminar tus momentos especiales.",
 };

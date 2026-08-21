@@ -57,7 +57,7 @@ export default async function RegisterPage({
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12">
       <div className="glass w-full max-w-sm animate-fade-up space-y-4 rounded-2xl p-8 shadow-2xl">
-        <h1 className="text-center text-3xl font-caveat text-reny-purple-dark">
+        <h1 className="text-center text-3xl font-caveat text-reni-purple-dark">
           Crear cuenta
         </h1>
 
@@ -74,7 +74,7 @@ export default async function RegisterPage({
             placeholder="Nombre completo"
             required
             autoComplete="name"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <input
             name="email"
@@ -82,7 +82,7 @@ export default async function RegisterPage({
             placeholder="Correo electrónico"
             required
             autoComplete="email"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <input
             name="password"
@@ -91,12 +91,12 @@ export default async function RegisterPage({
             required
             minLength={6}
             autoComplete="new-password"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <button
             type="submit"
             formAction={register}
-            className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white transition hover:opacity-90"
+            className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white transition hover:opacity-90"
           >
             Registrarse
           </button>
@@ -106,7 +106,7 @@ export default async function RegisterPage({
 
         <p className="text-center text-sm">
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-reny-purple-dark underline">
+          <Link href="/login" className="text-reni-purple-dark underline">
             Inicia sesión
           </Link>
         </p>

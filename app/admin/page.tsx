@@ -102,7 +102,7 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen px-4 py-12">
       <div className="mx-auto max-w-4xl space-y-8">
-        <h1 className="animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
+        <h1 className="animate-fade-up text-center text-4xl font-caveat text-reni-purple-dark">
           Panel de administración
         </h1>
 

@@ -9,7 +9,7 @@ import {
 const initialState: BulkUploadState = {};
 
 const inputClass =
-  "w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink";
+  "w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink";
 
 export default function BulkUpload() {
   const [state, formAction, pending] = useActionState(
@@ -32,7 +32,7 @@ export default function BulkUpload() {
           onClick={() => setMode("csv")}
           className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
             mode === "csv"
-              ? "bg-reny-purple text-white"
+              ? "bg-reni-purple text-white"
               : "bg-white/70 text-gray-600 hover:bg-white"
           }`}
         >
@@ -43,7 +43,7 @@ export default function BulkUpload() {
           onClick={() => setMode("json")}
           className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
             mode === "json"
-              ? "bg-reny-purple text-white"
+              ? "bg-reni-purple text-white"
               : "bg-white/70 text-gray-600 hover:bg-white"
           }`}
         >
@@ -52,7 +52,7 @@ export default function BulkUpload() {
         <a
           href="/bulk-template.csv"
           download
-          className="ml-auto self-center text-sm font-medium text-reny-pink-dark underline"
+          className="ml-auto self-center text-sm font-medium text-reni-pink-dark underline"
         >
           Descargar plantilla CSV
         </a>
@@ -70,7 +70,7 @@ export default function BulkUpload() {
               name="file"
               type="file"
               accept=".csv,text/csv"
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-reny-purple file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-reny-purple-dark"
+              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-lg file:border-0 file:bg-reni-purple file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-reni-purple-dark"
             />
           </div>
         ) : (
@@ -109,7 +109,7 @@ export default function BulkUpload() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? "Procesando..." : "Cargar productos"}
         </button>

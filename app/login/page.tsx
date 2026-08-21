@@ -46,7 +46,7 @@ export default async function LoginPage({
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12">
       <div className="glass w-full max-w-sm animate-fade-up space-y-4 rounded-2xl p-8 shadow-2xl">
-        <h1 className="text-center text-3xl font-caveat text-reny-purple-dark">
+        <h1 className="text-center text-3xl font-caveat text-reni-purple-dark">
           Iniciar sesión
         </h1>
 
@@ -68,7 +68,7 @@ export default async function LoginPage({
             placeholder="Correo electrónico"
             required
             autoComplete="email"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <input
             name="password"
@@ -76,12 +76,12 @@ export default async function LoginPage({
             placeholder="Contraseña"
             required
             autoComplete="current-password"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <button
             type="submit"
             formAction={login}
-            className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white transition hover:opacity-90"
+            className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white transition hover:opacity-90"
           >
             Entrar
           </button>
@@ -91,7 +91,7 @@ export default async function LoginPage({
 
         <p className="text-center text-sm">
           ¿No tienes cuenta?{" "}
-          <Link href="/register" className="text-reny-pink-dark underline">
+          <Link href="/register" className="text-reni-pink-dark underline">
             Regístrate
           </Link>
         </p>

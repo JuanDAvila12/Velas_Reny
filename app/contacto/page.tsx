@@ -53,7 +53,7 @@ export default async function ContactPage({
   return (
     <div className="min-h-screen px-4 py-12">
       <div className="glass mx-auto max-w-xl animate-fade-up rounded-2xl p-8 shadow-xl">
-        <h1 className="mb-4 font-caveat text-3xl text-reny-purple-dark">
+        <h1 className="mb-4 font-caveat text-3xl text-reni-purple-dark">
           Contáctanos
         </h1>
 
@@ -81,31 +81,31 @@ export default async function ContactPage({
             name="name"
             placeholder="Tu nombre"
             required
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <input
             name="email"
             type="email"
             placeholder="Correo electrónico"
             required
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <input
             name="subject"
             placeholder="Asunto"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <textarea
             name="message"
             placeholder="Escribe tu mensaje..."
             required
             rows={5}
-            className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           ></textarea>
           <button
             type="submit"
             formAction={sendMessage}
-            className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white transition hover:opacity-90"
+            className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white transition hover:opacity-90"
           >
             Enviar
           </button>

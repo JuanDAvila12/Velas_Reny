@@ -83,7 +83,7 @@ export default function POSPanel({ products }: { products: PosProduct[] }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar por nombre o código..."
-          className="w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+          className="w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
         />
         <ul className="mt-4 max-h-96 divide-y divide-gray-100 overflow-y-auto rounded-xl bg-white/70">
           {filtered.map((p) => (
@@ -101,7 +101,7 @@ export default function POSPanel({ products }: { products: PosProduct[] }) {
                 type="button"
                 onClick={() => addToTicket(p)}
                 disabled={p.stock <= 0}
-                className="shrink-0 rounded-lg bg-reny-purple px-3 py-1.5 text-sm font-bold text-white transition hover:bg-reny-purple-dark disabled:cursor-not-allowed disabled:opacity-50"
+                className="shrink-0 rounded-lg bg-reni-purple px-3 py-1.5 text-sm font-bold text-white transition hover:bg-reni-purple-dark disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {p.stock <= 0 ? "Sin stock" : "Agregar"}
               </button>
@@ -117,7 +117,7 @@ export default function POSPanel({ products }: { products: PosProduct[] }) {
 
       {/* Ticket */}
       <form action={formAction} className="rounded-xl bg-white/70 p-4">
-        <h3 className="mb-3 text-2xl font-caveat text-reny-purple-dark">
+        <h3 className="mb-3 text-2xl font-caveat text-reni-purple-dark">
           Ticket
         </h3>
 
@@ -151,7 +151,7 @@ export default function POSPanel({ products }: { products: PosProduct[] }) {
                   type="button"
                   onClick={() => updateQuantity(t.product.id, -1)}
                   disabled={t.quantity <= 1}
-                  className="h-7 w-7 rounded bg-reny-purple/20 font-bold text-reny-purple-dark disabled:opacity-40"
+                  className="h-7 w-7 rounded bg-reni-purple/20 font-bold text-reni-purple-dark disabled:opacity-40"
                   aria-label="Disminuir"
                 >
                   −
@@ -160,7 +160,7 @@ export default function POSPanel({ products }: { products: PosProduct[] }) {
                 <button
                   type="button"
                   onClick={() => updateQuantity(t.product.id, 1)}
-                  className="h-7 w-7 rounded bg-reny-purple/20 font-bold text-reny-purple-dark"
+                  className="h-7 w-7 rounded bg-reni-purple/20 font-bold text-reni-purple-dark"
                   aria-label="Aumentar"
                 >
                   +
@@ -195,18 +195,18 @@ export default function POSPanel({ products }: { products: PosProduct[] }) {
           <input
             name="customer_name"
             placeholder="Nombre del cliente (opcional)"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <textarea
             name="notes"
             rows={2}
             placeholder="Nota (opcional)"
-            className="w-full rounded-lg border border-reny-purple/60 bg-white p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+            className="w-full rounded-lg border border-reni-purple/60 bg-white p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
           />
           <button
             type="submit"
             disabled={pending || ticket.length === 0}
-            className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white shadow transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white shadow transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {pending ? "Cobrando..." : `Cobrar $${total.toFixed(2)}`}
           </button>

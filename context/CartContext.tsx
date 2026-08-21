@@ -26,7 +26,7 @@ interface CartContextValue {
   clearCart: () => void;
 }
 
-const STORAGE_KEY = "velasreny_cart";
+const STORAGE_KEY = "velasreni_cart";
 
 const CartContext = createContext<CartContextValue | null>(null);
 

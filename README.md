@@ -1,4 +1,4 @@
-# Velas Reny 🕯️
+# Velas Reni 🕯️
 
 Catálogo de velas artesanales construido con **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS** y **Supabase** (Auth, PostgreSQL, Storage y Row Level Security).
 
@@ -26,8 +26,8 @@ Catálogo de velas artesanales construido con **Next.js 16 (App Router)**, **Typ
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/JuanDAvila12/Velas_Reny.git
-   cd Velas_Reny
+   git clone https://github.com/JuanDAvila12/Velas_Reni.git
+   cd Velas_Reni
    ```
 
 2. Instala las dependencias:
@@ -52,7 +52,7 @@ Catálogo de velas artesanales construido con **Next.js 16 (App Router)**, **Typ
 
    > `NEXT_PUBLIC_SITE_URL` es la URL pública del sitio y se usa para los
    > redirects de OAuth (Google/Facebook). En producción, pon
-   > `https://velas-reny.vercel.app` (o tu dominio real).
+   > `https://velas-reni.vercel.app` (o tu dominio real).
 
    > ⚠️ **Importante:** nunca pongas la `service_role key` en variables
    > `NEXT_PUBLIC_*`. `.env.local` ya está en `.gitignore`.
@@ -239,7 +239,7 @@ reemplazarse por los IDs reales de tus productos).
 
 - **Contexto global** en `context/CartContext.tsx`, envuelto en `app/layout.tsx`
   con `<CartProvider>`.
-- Persistido en `localStorage` bajo la clave `velasreny_cart`.
+- Persistido en `localStorage` bajo la clave `velasreni_cart`.
 - Ícono con badge en el `Navbar` que muestra el total de artículos y enlaza a
   `/carrito`.
 - Página `/carrito`: editar cantidades, quitar artículos, subtotales y total.

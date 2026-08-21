@@ -28,7 +28,7 @@ export default async function PedidoConfirmadoPage({
         <div className="mb-4 text-5xl" aria-hidden="true">
           🎉
         </div>
-        <h1 className="mb-2 text-4xl font-caveat text-reny-purple-dark">
+        <h1 className="mb-2 text-4xl font-caveat text-reni-purple-dark">
           ¡Pedido confirmado!
         </h1>
         <p className="mb-6 text-gray-600">
@@ -67,7 +67,7 @@ export default async function PedidoConfirmadoPage({
 
         <Link
           href="/productos"
-          className="inline-block rounded-full bg-gradient-to-r from-reny-purple to-reny-pink px-8 py-3 font-bold text-white shadow transition hover:-translate-y-0.5 hover:shadow-xl"
+          className="inline-block rounded-full bg-gradient-to-r from-reni-purple to-reni-pink px-8 py-3 font-bold text-white shadow transition hover:-translate-y-0.5 hover:shadow-xl"
         >
           Seguir comprando
         </Link>

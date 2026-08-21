@@ -57,7 +57,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                   onClick={() => setActiveImage(i)}
                   className={`h-20 w-20 shrink-0 overflow-hidden rounded-lg transition ${
                     i === activeImage
-                      ? "ring-2 ring-reny-pink-dark"
+                      ? "ring-2 ring-reni-pink-dark"
                       : "opacity-70 hover:opacity-100"
                   }`}
                 >
@@ -74,12 +74,12 @@ export default function ProductDetail({ product }: { product: Product }) {
 
         {/* Información + compra */}
         <div className="space-y-4">
-          <h1 className="text-4xl font-caveat text-reny-purple-dark">
+          <h1 className="text-4xl font-caveat text-reni-purple-dark">
             {product.name}
           </h1>
 
           {product.category && (
-            <span className="inline-block rounded-full bg-reny-green px-3 py-1 text-sm text-white">
+            <span className="inline-block rounded-full bg-reni-green px-3 py-1 text-sm text-white">
               {product.category.name}
             </span>
           )}
@@ -116,12 +116,12 @@ export default function ProductDetail({ product }: { product: Product }) {
           {!outOfStock && (
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium">Cantidad:</span>
-              <div className="flex items-center rounded-lg border border-reny-purple/60 bg-white/70">
+              <div className="flex items-center rounded-lg border border-reni-purple/60 bg-white/70">
                 <button
                   type="button"
                   onClick={() => changeQuantity(-1)}
                   disabled={quantity <= 1}
-                  className="px-3 py-2 text-lg font-bold text-reny-purple-dark transition hover:bg-reny-purple/20 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="px-3 py-2 text-lg font-bold text-reni-purple-dark transition hover:bg-reni-purple/20 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Disminuir cantidad"
                 >
                   −
@@ -131,7 +131,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                   type="button"
                   onClick={() => changeQuantity(1)}
                   disabled={quantity >= maxStock}
-                  className="px-3 py-2 text-lg font-bold text-reny-purple-dark transition hover:bg-reny-purple/20 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="px-3 py-2 text-lg font-bold text-reni-purple-dark transition hover:bg-reni-purple/20 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Aumentar cantidad"
                 >
                   +
@@ -148,8 +148,8 @@ export default function ProductDetail({ product }: { product: Product }) {
               outOfStock
                 ? "cursor-not-allowed bg-gray-400"
                 : added
-                  ? "bg-reny-green"
-                  : "bg-gradient-to-r from-reny-purple to-reny-pink hover:opacity-90"
+                  ? "bg-reni-green"
+                  : "bg-gradient-to-r from-reni-purple to-reni-pink hover:opacity-90"
             }`}
           >
             {outOfStock
@@ -161,7 +161,7 @@ export default function ProductDetail({ product }: { product: Product }) {
 
           <Link
             href="/productos"
-            className="block text-center text-sm text-reny-purple-dark underline"
+            className="block text-center text-sm text-reni-purple-dark underline"
           >
             ← Volver al catálogo
           </Link>

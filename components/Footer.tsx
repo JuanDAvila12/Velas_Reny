@@ -34,10 +34,10 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="mt-12 bg-gradient-to-br from-reny-purple-dark via-[#8B5CF6] to-reny-pink-dark px-4 py-12 text-white">
+    <footer className="mt-12 bg-gradient-to-br from-reni-purple-dark via-[#8B5CF6] to-reni-pink-dark px-4 py-12 text-white">
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
         <div>
-          <p className="font-caveat text-3xl">Velas Reny</p>
+          <p className="font-caveat text-3xl">Velas Reni</p>
           <p className="mt-2 text-sm text-white/80">
             Velas artesanales de cera de soya natural para iluminar tus
             momentos especiales.
@@ -92,7 +92,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-8 border-t border-white/20 pt-4 text-center text-xs text-white/70">
-        © {new Date().getFullYear()} Velas Reny. Todos los derechos reservados.
+        © {new Date().getFullYear()} Velas Reni. Todos los derechos reservados.
       </div>
     </footer>
   );

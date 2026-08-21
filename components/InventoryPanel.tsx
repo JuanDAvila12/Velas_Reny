@@ -14,7 +14,7 @@ import type {
 const initialState: InventoryActionState = {};
 
 const inputClass =
-  "w-full rounded-lg border border-reny-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink";
+  "w-full rounded-lg border border-reni-purple/60 bg-white/70 p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink";
 
 const TYPE_LABELS: Record<StockMovementType, string> = {
   entrada: "Entrada",
@@ -27,7 +27,7 @@ const TYPE_STYLES: Record<StockMovementType, string> = {
   entrada: "bg-green-100 text-green-700",
   salida: "bg-red-100 text-red-700",
   ajuste: "bg-amber-100 text-amber-700",
-  ajuste_inicial: "bg-reny-purple/20 text-reny-purple-dark",
+  ajuste_inicial: "bg-reni-purple/20 text-reni-purple-dark",
 };
 
 function quantityPresentation(type: StockMovementType) {
@@ -63,7 +63,7 @@ export default function InventoryPanel({
     <div className="animate-fade-in space-y-10">
       {/* Formulario de movimiento */}
       <form action={formAction} className="space-y-4">
-        <h3 className="text-2xl font-caveat text-reny-purple-dark">
+        <h3 className="text-2xl font-caveat text-reni-purple-dark">
           Registrar movimiento
         </h3>
 
@@ -142,7 +142,7 @@ export default function InventoryPanel({
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? "Registrando..." : "Registrar movimiento"}
         </button>
@@ -151,7 +151,7 @@ export default function InventoryPanel({
       {/* Stock actual */}
       <div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h3 className="text-2xl font-caveat text-reny-purple-dark">
+          <h3 className="text-2xl font-caveat text-reni-purple-dark">
             Stock actual ({products.length})
           </h3>
           <input
@@ -210,7 +210,7 @@ export default function InventoryPanel({
 
       {/* Últimos movimientos */}
       <div>
-        <h3 className="mb-3 text-2xl font-caveat text-reny-purple-dark">
+        <h3 className="mb-3 text-2xl font-caveat text-reni-purple-dark">
           Últimos movimientos ({movements.length})
         </h3>
 

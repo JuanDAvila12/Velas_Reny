@@ -93,7 +93,7 @@ export default async function ProfilePage({
   return (
     <div className="min-h-screen px-4 py-8">
       <div className="mx-auto max-w-xl space-y-6 rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="font-caveat text-3xl text-reny-purple-dark">Mi perfil</h1>
+        <h1 className="font-caveat text-3xl text-reni-purple-dark">Mi perfil</h1>
 
         {success === "updated" && (
           <p className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
@@ -117,7 +117,7 @@ export default async function ProfilePage({
             <input
               name="fullName"
               defaultValue={profile?.full_name || ""}
-              className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+              className="w-full rounded-lg border border-reni-purple p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
             />
           </div>
           <div>
@@ -125,7 +125,7 @@ export default async function ProfilePage({
             <input
               name="phone"
               defaultValue={profile?.phone || ""}
-              className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+              className="w-full rounded-lg border border-reni-purple p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
             />
           </div>
           <div>
@@ -133,13 +133,13 @@ export default async function ProfilePage({
             <input
               name="address"
               defaultValue={profile?.address || ""}
-              className="w-full rounded-lg border border-reny-purple p-3 focus:outline-none focus:ring-2 focus:ring-reny-pink"
+              className="w-full rounded-lg border border-reni-purple p-3 focus:outline-none focus:ring-2 focus:ring-reni-pink"
             />
           </div>
           <button
             type="submit"
             formAction={updateProfile}
-            className="w-full rounded-lg bg-reny-green py-3 font-bold text-white transition hover:bg-reny-green-dark"
+            className="w-full rounded-lg bg-reni-green py-3 font-bold text-white transition hover:bg-reni-green-dark"
           >
             Guardar cambios
           </button>
@@ -155,7 +155,7 @@ export default async function ProfilePage({
           </button>
         </form>
 
-        <Link href="/" className="block text-center text-reny-purple-dark">
+        <Link href="/" className="block text-center text-reni-purple-dark">
           ← Volver al inicio
         </Link>
       </div>

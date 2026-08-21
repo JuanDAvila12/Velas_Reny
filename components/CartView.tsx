@@ -11,13 +11,13 @@ export default function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
     return (
       <div className="min-h-screen px-4 py-12">
         <div className="glass mx-auto max-w-2xl animate-fade-up rounded-2xl p-8 text-center shadow-xl">
-          <h1 className="mb-4 text-4xl font-caveat text-reny-purple-dark">
+          <h1 className="mb-4 text-4xl font-caveat text-reni-purple-dark">
             Tu carrito
           </h1>
           <p className="mb-6 text-gray-600">Tu carrito está vacío.</p>
           <Link
             href="/productos"
-            className="inline-block rounded-full bg-gradient-to-r from-reny-purple to-reny-pink px-8 py-3 font-bold text-white shadow transition hover:-translate-y-0.5 hover:shadow-xl"
+            className="inline-block rounded-full bg-gradient-to-r from-reni-purple to-reni-pink px-8 py-3 font-bold text-white shadow transition hover:-translate-y-0.5 hover:shadow-xl"
           >
             Ver catálogo
           </Link>
@@ -29,7 +29,7 @@ export default function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
     <div className="min-h-screen px-4 py-12">
       <div className="mx-auto max-w-4xl">
-        <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
+        <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reni-purple-dark">
           Tu carrito
         </h1>
 
@@ -48,7 +48,7 @@ export default function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
                 <div className="flex-1">
                   <Link
                     href={`/productos/${product.slug}`}
-                    className="font-semibold text-reny-purple-dark hover:underline"
+                    className="font-semibold text-reni-purple-dark hover:underline"
                   >
                     {product.name}
                   </Link>
@@ -62,7 +62,7 @@ export default function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
                     type="button"
                     onClick={() => updateQuantity(product.id, quantity - 1)}
                     disabled={quantity <= 1}
-                    className="h-8 w-8 rounded-lg bg-reny-purple/20 text-lg font-bold text-reny-purple-dark transition hover:bg-reny-purple/40 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="h-8 w-8 rounded-lg bg-reni-purple/20 text-lg font-bold text-reni-purple-dark transition hover:bg-reni-purple/40 disabled:cursor-not-allowed disabled:opacity-40"
                     aria-label="Disminuir cantidad"
                   >
                     −
@@ -72,7 +72,7 @@ export default function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
                     type="button"
                     onClick={() => updateQuantity(product.id, quantity + 1)}
                     disabled={product.stock != null && quantity >= product.stock}
-                    className="h-8 w-8 rounded-lg bg-reny-purple/20 text-lg font-bold text-reny-purple-dark transition hover:bg-reny-purple/40 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="h-8 w-8 rounded-lg bg-reni-purple/20 text-lg font-bold text-reni-purple-dark transition hover:bg-reni-purple/40 disabled:cursor-not-allowed disabled:opacity-40"
                     aria-label="Aumentar cantidad"
                   >
                     +
@@ -114,14 +114,14 @@ export default function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
             {isLoggedIn ? (
               <Link
                 href="/checkout"
-                className="block w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 text-center font-bold text-white shadow transition hover:opacity-90"
+                className="block w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 text-center font-bold text-white shadow transition hover:opacity-90"
               >
                 Finalizar pedido
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="block w-full rounded-lg bg-gradient-to-r from-reny-purple to-reny-pink py-3 text-center font-bold text-white shadow transition hover:opacity-90"
+                className="block w-full rounded-lg bg-gradient-to-r from-reni-purple to-reni-pink py-3 text-center font-bold text-white shadow transition hover:opacity-90"
               >
                 Inicia sesión para comprar
               </Link>

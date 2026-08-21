@@ -10,13 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         // Paleta personalizada
-        "reny-purple": "#D8B4FE", // lila pastel
-        "reny-purple-dark": "#A78BFA",
-        "reny-pink": "#F9A8D4",
-        "reny-pink-dark": "#F472B6",
-        "reny-green": "#BBF7D0",
-        "reny-green-dark": "#86EFAC",
-        "reny-cream": "#FFF7ED",
+        "reni-purple": "#D8B4FE", // lila pastel
+        "reni-purple-dark": "#A78BFA",
+        "reni-pink": "#F9A8D4",
+        "reni-pink-dark": "#F472B6",
+        "reni-green": "#BBF7D0",
+        "reni-green-dark": "#86EFAC",
+        "reni-cream": "#FFF7ED",
       },
       fontFamily: {
         caveat: ["var(--font-caveat)", "cursive"],

@@ -25,7 +25,7 @@ export default async function CategoryPage({
 
   return (
     <div className="min-h-screen px-4 py-12">
-      <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reny-purple-dark">
+      <h1 className="mb-8 animate-fade-up text-center text-4xl font-caveat text-reni-purple-dark">
         {category.name}
       </h1>
       {products && products.length > 0 ? (

@@ -15,7 +15,7 @@ type OAuthProvider = "google" | "facebook";
 async function signInWithOAuth(provider: OAuthProvider) {
   const supabase = await createClient();
 
-  // En producción define NEXT_PUBLIC_SITE_URL=https://velas-reny.vercel.app
+  // En producción define NEXT_PUBLIC_SITE_URL=https://velas-reni.vercel.app
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
