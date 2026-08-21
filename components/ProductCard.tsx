@@ -28,7 +28,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="group flex animate-fade-up flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
       <Link href={`/productos/${product.slug}`} className="flex flex-1 flex-col">
-        <div className="relative h-32 overflow-hidden md:h-36 lg:h-40">
+        <div className="relative h-32 overflow-hidden">
           <img
             src={product.image_url || "/placeholder-vela.jpg"}
             alt={product.name}

@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  /* Paleta personalizada de la marca */
+  --color-reny-purple: #D8B4FE; /* lila pastel */
+  --color-reny-purple-dark: #A78BFA;
+  --color-reny-pink: #F9A8D4;
+  --color-reny-pink-dark: #F472B6;
+  --color-reny-green: #BBF7D0;
+  --color-reny-green-dark: #86EFAC;
+  --color-reny-cream: #FFF7ED;
+}
+
+@theme inline {
+  /* Fuente caveat (variable definida por next/font en app/layout.tsx) */
+  --font-caveat: var(--font-caveat), cursive;
+}
+
 body {
   background-color: #FFF7ED; /* color crema de respaldo */
   min-height: 100vh;
